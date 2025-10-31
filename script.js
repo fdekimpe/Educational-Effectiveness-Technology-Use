@@ -99,7 +99,7 @@ class QuestionnaireApp {
             other: selectedDice.id === 'diceNone' ? this.elements.diceOther.value : ''
         };
         
-        // Show the questionnaire
+        // Hide intro and show questionnaire
         this.elements.intro.classList.add('d-none');
         this.elements.questionnaire.classList.remove('d-none');
         this.elements.progressContainer.classList.remove('d-none');
@@ -111,8 +111,17 @@ class QuestionnaireApp {
         // Initialize section navigation
         this.setupSectionNavigation();
         
-        // Show first section
-        this.showSection(0);
+        // Show first section and question
+        this.currentSectionIndex = 0;
+        this.currentQuestionIndex = 0;
+        
+        // Make sure the questionnaire container is visible
+        this.elements.questionContainer.style.display = 'block';
+        
+        // Show the first question
+        this.renderQuestion();
+        this.updateProgress();
+        this.updateNavigationButtons();
         
         // Ensure auto-advance is set up
         this.setupAutoAdvance();
