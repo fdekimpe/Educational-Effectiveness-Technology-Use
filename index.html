@@ -13,9 +13,12 @@
         <!-- Introductiescherm -->
         <div id="intro" class="card my-4">
             <div class="card-body">
-                <h1 class="card-title">Educational Effectiveness van technology-based simulatieleren: Virtual Reality</h1>
+                <h1 class="card-title">Educational Effectiveness van technology-based simulatieleren met Extende Reality</h1>
                 <div class="intro-text">
-                    <p>Deze vragenlijst gaat over de effectiviteit van Virtual Reality (VR) in het onderwijs. We hebben het dan over de mate waarin een VR-applicatie bijdraagt aan de realisatie van de leerdoelen. Het geleerde is ook na gebruik van de applicatie en in andere situaties beschikbaar (langere termijn en transfer). Met Virtual Reality (VR) bedoelen we alle vormen van digitale werelden: AR (Augmented Reality), XR (eXtended Reality) en serious/educational games.</p>
+                    <p>Deze vragenlijst gaat over de effectiviteit van Extended Reality (XR) in het onderwijs. 
+                        We hebben het dan over de mate waarin een XR-applicatie bijdraagt aan de realisatie van de leerdoelen. 
+                        Het geleerde zou ook na gebruik van de applicatie en in andere situaties beschikbaar (langere termijn en transfer) moeten zijn. 
+                        Met XR bedoelen we alle vormen van digitale werelden: AR (Augmented Reality), VR (virtual Reality) en serious/educational games.</p>
                     <p>De vragenlijst bestaat uit 4 blokken met stellingen die elk inzoomen op een aspect van een VR-applicatie.</p>
                     
                     <div class="alert alert-info">
@@ -34,25 +37,25 @@
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="dice" id="diceDangerous" value="dangerous">
                             <label class="form-check-label" for="diceDangerous">
-                                Dangerous (gevaarlijk)
+                                Gevaarlijk
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="dice" id="diceImpossible" value="impossible">
                             <label class="form-check-label" for="diceImpossible">
-                                Impossible (onmogelijk)
+                                Onmogelijk
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="dice" id="diceCounterproductive" value="counterproductive">
                             <label class="form-check-label" for="diceCounterproductive">
-                                Counterproductive (onwenselijk)
+                                Onwenselijk
                             </label>
                         </div>
                         <div class="form-check">
                             <input class="form-check-input" type="radio" name="dice" id="diceExpensive" value="expensive">
                             <label class="form-check-label" for="diceExpensive">
-                                Expensive (te duur)
+                                Duur
                             </label>
                         </div>
                         <div class="form-check">
@@ -86,10 +89,17 @@
 
         <!-- Section Navigation (initially hidden) -->
         <div id="section-navigation" class="d-none justify-content-between mb-4">
-            <button class="btn btn-outline-secondary section-nav m-2" data-section="0">Deel 1: Doelgerichtheid</button>
-            <button class="btn btn-outline-secondary section-nav m-2" data-section="1">Deel 2: Didactiek</button>
-            <button class="btn btn-outline-secondary section-nav m-2" data-section="2">Deel 3: Leermechanismen</button>
-            <button class="btn btn-outline-secondary section-nav m-2" data-section="3">Deel 4: Effecten</button>
+            <div class="d-flex">
+                <button class="btn btn-outline-secondary section-nav m-2" data-section="0">Deel 1: Doelgerichtheid</button>
+                <button class="btn btn-outline-secondary section-nav m-2" data-section="1">Deel 2: Didactiek</button>
+                <button class="btn btn-outline-secondary section-nav m-2" data-section="2">Deel 3: Leermechanismen</button>
+                <button class="btn btn-outline-secondary section-nav m-2" data-section="3">Deel 4: Effecten</button>
+            </div>
+            <div class="d-flex align-items-center">
+                <button id="summaryBtn" class="btn btn-info ms-2" title="Bekijk samenvatting">
+                    <i class="fas fa-chart-bar me-1"></i> Samenvatting
+                </button>
+            </div>
         </div>
 
         <!-- Vragenlijst -->
@@ -97,8 +107,10 @@
             <div id="section-description" class="alert alert-info mb-4"></div>
             <div id="question-container"></div>
             
-            <div class="d-flex justify-content-between mt-4">
-                <button id="prevBtn" class="btn btn-secondary">Vorige</button>
+            <div class="d-flex justify-content-between align-items-center mt-4">
+                <div>
+                    <button id="prevBtn" class="btn btn-secondary">Vorige</button>
+                </div>
                 <div>
                     <button id="saveBtn" class="btn btn-outline-primary me-2">Opslaan</button>
                     <button id="nextBtn" class="btn btn-primary">Volgende</button>
@@ -132,12 +144,41 @@
         </div>
     </div>
 
+    <!-- AI Summary Overlay -->
+    <div id="ai-summary-overlay" class="overlay">
+        <div class="overlay-content">
+            <div class="overlay-header">
+                <h3 id="ai-summary-title">Samenvatting</h3>
+            </div>
+            <div class="overlay-body">
+                <div id="ai-summary-loading" class="text-center py-5">
+                    <div class="spinner-border text-primary" role="status">
+                        <span class="visually-hidden">Bezig met analyseren...</span>
+                    </div>
+                    <p class="mt-3">We analyseren je antwoorden...</p>
+                </div>
+                <div id="ai-summary-content" style="display: none;"></div>
+            </div>
+            <div class="overlay-footer">
+                <button id="prev-section-summary" class="btn btn-outline-secondary me-2">
+                    <i class="fas fa-arrow-left"></i> Vorige sectie
+                </button>
+                <button id="next-section-summary" class="btn btn-primary">
+                    Volgende sectie <i class="fas fa-arrow-right"></i>
+                </button>
+                <button id="close-summary-btn" class="btn btn-outline-secondary ms-auto">
+                    Sluiten
+                </button>
+            </div>
+        </div>
+    </div>
+
     <footer class="footer mt-5 py-3 bg-light">
         <div class="container text-center">
             <span class="text-muted">
-                Jonker, H., Damhuis, R., de Kimpe, F., Pinkster-Schalken, S., Greven, M., & Pol, A.-M. (2024). 
-                Vragenlijst voor het meten van Educational Effectiveness van Virtual Reality. 
-                [versie 2]. Hogeschool Windesheim, lectoraat Onderwijsinnovatie en ICT/lerarenopleiding Technische Beroepen.
+                Vragenlijst voor het meten van Educational Effectiveness van Virtual Reality.
+                <br>
+                Hogeschool Windesheim, lectoraat Onderwijsinnovatie en ICT/lerarenopleiding Technische Beroepen.
             </span>
         </div>
     </footer>
