@@ -105,11 +105,15 @@ class QuestionnaireApp {
         this.elements.progressContainer.classList.remove('d-none');
         
         // Show section navigation and progress
-        document.getElementById('section-navigation').style.display = 'flex';
-        document.getElementById('section-progress-container').style.display = 'block';
+        const sectionNav = document.getElementById('section-navigation');
+        sectionNav.classList.remove('d-none');
+        sectionNav.classList.add('d-flex');
         
-        // Initialize section navigation
+        // Setup section navigation
         this.setupSectionNavigation();
+        
+        // Hide section description
+        document.getElementById('section-description').classList.add('d-none');
         
         // Show first section and question
         this.currentSectionIndex = 0;
@@ -129,41 +133,43 @@ class QuestionnaireApp {
     
     // Navigate between questions
     navigate(direction) {
-       // Save current answer before navigating
-    this.saveCurrentAnswer();
-    
-    const currentSection = questionnaireData.sections[this.currentSectionIndex];
-    this.currentQuestionIndex += direction;
-    
-    // Check if we need to change section
-    if (this.currentQuestionIndex >= currentSection.questions.length) {
-        // Move to next section
-        this.currentSectionIndex++;
-        this.currentQuestionIndex = 0;
+        // Save current answer before navigating
+        this.saveCurrentAnswer();
         
-        // If no more sections, show summary
-        if (this.currentSectionIndex >= questionnaireData.sections.length) {
-            this.showSummary();
-            return;
-        }
-    } else if (this.currentQuestionIndex < 0) {
-        // Move to previous section
-        this.currentSectionIndex--;
+        const currentSection = questionnaireData.sections[this.currentSectionIndex];
+        this.currentQuestionIndex += direction;
         
-        // If before first section, go to intro
-        if (this.currentSectionIndex < 0) {
-            this.elements.questionnaire.classList.add('d-none');
-            this.elements.progressContainer.classList.add('d-none');
-            this.elements.intro.classList.remove('d-none');
-            this.currentSectionIndex = 0;
+        // Check if we need to change section
+        if (this.currentQuestionIndex >= currentSection.questions.length) {
+            // Move to next section
+            this.currentSectionIndex++;
             this.currentQuestionIndex = 0;
-            return;
+            
+            // If no more sections, show summary
+            if (this.currentSectionIndex >= questionnaireData.sections.length) {
+                this.showSummary();
+                return;
+            }
+            this.updateSectionNavigation();
+        } else if (this.currentQuestionIndex < 0) {
+            // Move to previous section
+            this.currentSectionIndex--;
+            
+            // If before first section, go to intro
+            if (this.currentSectionIndex < 0) {
+                this.elements.questionnaire.classList.add('d-none');
+                this.elements.progressContainer.classList.add('d-none');
+                this.elements.intro.classList.remove('d-none');
+                this.currentSectionIndex = 0;
+                this.currentQuestionIndex = 0;
+                return;
+            }
+            
+            // Set to last question of previous section
+            const prevSection = questionnaireData.sections[this.currentSectionIndex];
+            this.currentQuestionIndex = prevSection.questions.length - 1;
+            this.updateSectionNavigation();
         }
-        
-        // Set to last question of previous section
-        const prevSection = questionnaireData.sections[this.currentSectionIndex];
-        this.currentQuestionIndex = prevSection.questions.length - 1;
-    }
     
     // Render the new question
     this.renderQuestion();
@@ -237,6 +243,44 @@ class QuestionnaireApp {
         }
     }
     
+    // Setup section navigation
+    setupSectionNavigation() {
+        const sectionNavButtons = document.querySelectorAll('.section-nav');
+        
+        sectionNavButtons.forEach((button, index) => {
+            button.addEventListener('click', () => {
+                // Save current answer before navigating
+                this.saveCurrentAnswer();
+                
+                // Update current section and question indices
+                this.currentSectionIndex = index;
+                this.currentQuestionIndex = 0; // Always start at first question of the section
+                
+                // Update the UI
+                this.renderQuestion();
+                this.updateNavigationButtons();
+                this.updateSectionNavigation();
+            });
+        });
+        
+        // Set initial active state
+        this.updateSectionNavigation();
+    }
+    
+    // Update section navigation buttons state
+    updateSectionNavigation() {
+        const sectionNavButtons = document.querySelectorAll('.section-nav');
+        sectionNavButtons.forEach((button, index) => {
+            if (index === this.currentSectionIndex) {
+                button.classList.remove('btn-outline-secondary');
+                button.classList.add('btn-primary');
+            } else {
+                button.classList.remove('btn-primary');
+                button.classList.add('btn-outline-secondary');
+            }
+        });
+    }
+    
     // Get current question object
     getCurrentQuestion() {
         if (this.currentSectionIndex >= 0 && this.currentSectionIndex < questionnaireData.sections.length) {
@@ -246,6 +290,20 @@ class QuestionnaireApp {
             }
         }
         return null;
+    }
+    
+    // Update navigation buttons state
+    updateNavigationButtons() {
+        const currentSection = questionnaireData.sections[this.currentSectionIndex];
+        
+        // Update previous button
+        this.elements.prevBtn.disabled = this.currentSectionIndex === 0 && this.currentQuestionIndex === 0;
+        
+        // Update next button text and state
+        const isLastQuestion = this.currentQuestionIndex === currentSection.questions.length - 1;
+        const isLastSection = this.currentSectionIndex === questionnaireData.sections.length - 1;
+        
+        this.elements.nextBtn.textContent = isLastQuestion && isLastSection ? 'Afronden' : 'Volgende';
     }
     
     // Get current question number (global index)
