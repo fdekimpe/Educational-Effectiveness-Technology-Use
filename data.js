@@ -1,5 +1,811 @@
+// Resources
+const resources = {
+    // General resources
+    userResearch: {
+        title: "Handleiding gebruikersonderzoek",
+        url: "#"
+    },
+    feedbackMethods: {
+        title: "Effectieve feedback methoden",
+        url: "#"
+    },
+    trainingProviders: {
+        title: "Lijst met aanbieders",
+        url: "#"
+    },
+    teachingMethods: {
+        title: "Effectieve werkvormen",
+        url: "#"
+    },
+    feedbackTools: {
+        title: "Tools voor feedback verzamelen",
+        url: "#"
+    },
+    
+    // Section 1: Doelgerichtheid
+    targetGroupAnalysis: {
+        title: "Handleiding doelgroepanalyse",
+        url: "#"
+    },
+    personaDevelopment: {
+        title: "Persona's ontwikkelen",
+        url: "#"
+    },
+    smartGoals: {
+        title: "SMART doelen formuleren",
+        url: "#"
+    },
+    learningObjectives: {
+        title: "Effectieve leerdoelen opstellen",
+        url: "#"
+    },
+    contextualLearning: {
+        title: "Contextueel leren",
+        url: "#"
+    },
+    differentiation: {
+        title: "Differentiatie in het onderwijs",
+        url: "#"
+    },
+    
+    // Section 2: Didactiek
+    educationalValue: {
+        title: "Meerwaarde van educatieve technologie",
+        url: "#"
+    },
+    effectivenessMeasurement: {
+        title: "Effectiviteit meten",
+        url: "#"
+    },
+    multisensoryLearning: {
+        title: "Multisensorieel leren in het onderwijs",
+        url: "#"
+    },
+    learningStyles: {
+        title: "Werken met leerstijlen",
+        url: "#"
+    },
+    
+    // Section 3: Leermechanismen
+    vrPresence: {
+        title: "Aanwezigheidsgevoel in VR optimaliseren",
+        url: "#"
+    },
+    feedbackMechanisms: {
+        title: "Effectieve feedback mechanismen",
+        url: "#"
+    },
+    
+    // Section 4: Effecten
+    learningTransfer: {
+        title: "Transfer van leren naar praktijk",
+        url: "#"
+    },
+    evaluationMethods: {
+        title: "Effectieve evaluatiemethoden",
+        url: "#"
+    },
+    
+    // Additional resources
+    teachingGuide: {
+        title: "Docentenhandleiding opstellen",
+        url: "#"
+    },
+    learningPaths: {
+        title: "Leerlijnen ontwikkelen",
+        url: "#"
+    },
+    continuousLearning: {
+        title: "Doorlopende leerlijnen",
+        url: "#"
+    },
+    practicalExamples: {
+        title: "Praktijkvoorbeelden verzamelen",
+        url: "#"
+    },
+    levelDetermination: {
+        title: "Niveaus bepalen",
+        url: "#"
+    },
+    teacherRole: {
+        title: "Rol van de docent bij technologie",
+        url: "#"
+    },
+    realWorldLearning: {
+        title: "Levensecht leren toepassen",
+        url: "#"
+    },
+    contentValidation: {
+        title: "Content validatie",
+        url: "#"
+    },
+    expertReview: {
+        title: "Expert review uitvoeren",
+        url: "#"
+    },
+    cognitiveLoad: {
+        title: "Cognitieve belastingstheorie",
+        url: "#"
+    },
+    informationDosing: {
+        title: "Informatie doseren",
+        url: "#"
+    },
+    learningActivities: {
+        title: "Leeractiviteiten ontwerpen",
+        url: "#"
+    },
+    targetedExercises: {
+        title: "Doelgerichte oefeningen",
+        url: "#"
+    },
+    learningPathDesign: {
+        title: "Leerroutes ontwerpen",
+        url: "#"
+    },
+    adaptiveLearning: {
+        title: "Adaptief leren",
+        url: "#"
+    },
+    priorKnowledge: {
+        title: "Voorkennis activeren",
+        url: "#"
+    },
+    scaffolding: {
+        title: "Scaffolding technieken",
+        url: "#"
+    },
+    
+    // Add more resources as needed
+};
+
+// Recommendations and resources structure
+window.recommendations = {
+    generalTips: [
+        {
+            title: "Gebruikersonderzoek",
+            description: "Organiseer een evaluatie met een kleine gebruikersgroep om specifieke pijnpunten te identificeren.",
+            resources: [
+                resources.userResearch,
+                resources.feedbackMethods
+            ]
+        },
+        {
+            title: "Training en workshops",
+            description: "Overweeg een training of workshop over effectieve onderwijsstrategieën voor dit onderwerp.",
+            resources: [
+                resources.trainingProviders,
+                resources.teachingMethods
+            ]
+        },
+        {
+            title: "Feedback verzamelen",
+            description: "Verzamel regelmatig feedback van studenten en pas je aanpak hierop aan.",
+            resources: [
+                resources.feedbackMethods,
+                resources.feedbackTools
+            ]
+        }
+    ],
+    sectionSpecific: {
+        // Sectie 1: Doelgerichtheid
+        section1: [
+            {
+                questionId: 'C1',
+                recommendations: [
+                    {
+                        title: "Doelgroepanalyse uitvoeren",
+                        description: "Voer een grondige doelgroepanalyse uit met aandacht voor leeftijd, voorkennis en digitale vaardigheden. Betrek hierbij vertegenwoordigers van de doelgroep.",
+                        resources: [
+                            resources.targetGroupAnalysis,
+                            resources.personaDevelopment
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'C2',
+                recommendations: [
+                    {
+                        title: "Leerdoelen verduidelijken",
+                        description: "Formuleer leerdoelen volgens het SMART-principe en zorg dat ze begrijpelijk zijn voor alle betrokken partijen (ontwikkelaars, docenten en studenten).",
+                        resources: [
+                            resources.smartGoals,
+                            resources.learningObjectives
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'C3',
+                recommendations: [
+                    {
+                        title: "Relevantie vergroten",
+                        description: "Toon expliciet de relevantie van de leerdoelen voor de doelgroep door concrete voorbeelden en praktijksituaties te gebruiken.",
+                        resources: [
+                            resources.contextualLearning,
+                            resources.practicalExamples
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'C4',
+                recommendations: [
+                    {
+                        title: "Dagelijkse toepassingen benadrukken",
+                        description: "Koppel de leerdoelen aan dagelijkse situaties en ervaringen van de doelgroep om de betekenisvolheid te vergroten.",
+                        resources: [
+                            resources.contextualLearning,
+                            resources.realWorldLearning
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'C5',
+                recommendations: [
+                    {
+                        title: "Haalbaarheid vergroten",
+                        description: "Pas het niveau van de leerdoelen aan aan het niveau van de doelgroep. Overweeg differentiatie voor verschillende niveaus binnen de groep.",
+                        resources: [
+                            resources.differentiation,
+                            resources.levelDetermination
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'C6',
+                recommendations: [
+                    {
+                        title: "Aantrekkelijkheid vergroten",
+                        description: "Verken de interesses en voorkeuren van de doelgroep en pas het ontwerp hierop aan. Betrek de doelgroep bij het ontwerpproces.",
+                        resources: [
+                            { title: "Gamification technieken", url: "#" },
+                            { title: "User-centered design", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'C7',
+                recommendations: [
+                    {
+                        title: "Gebruiksvriendelijkheid verbeteren",
+                        description: "Voer gebruikersonderzoek uit om knelpunten in de gebruiksvriendelijkheid te identificeren en los deze systematisch op.",
+                        resources: [
+                            { title: "Usability testing", url: "#" },
+                            { title: "Toegankelijkheidsrichtlijnen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'C8',
+                recommendations: [
+                    {
+                        title: "Instructies verbeteren",
+                        description: "Ontwikkel duidelijke, beknopte instructies met visuele ondersteuning. Test deze met gebruikers om de begrijpelijkheid te waarborgen.",
+                        resources: [
+                            { title: "Effectieve instructies schrijven", url: "#" },
+                            { title: "Visuele handleidingen ontwerpen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'C9',
+                recommendations: [
+                    {
+                        title: "Reflectie stimuleren",
+                        description: "Integreer reflectiemomenten in de applicatie met gerichte vragen die aanzetten tot diepgaande reflectie op het leerproces.",
+                        resources: [
+                            { title: "Reflectie in het onderwijs", url: "#" },
+                            { title: "Reflectievragen formuleren", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'C10',
+                recommendations: [
+                    {
+                        title: "Docentondersteuning versterken",
+                        description: "Bied duidelijke richtlijnen en ondersteuningsmateriaal voor docenten over hun rol bij het gebruik van de applicatie.",
+                        resources: [
+                            resources.teacherRole,
+                            resources.teachingGuide
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'C11',
+                recommendations: [
+                    {
+                        title: "Leerlijn versterken",
+                        description: "Zorg voor een duidelijke opbouw in de leerstof, met een logische volgorde van leerdoelen, activiteiten en evaluatiemomenten.",
+                        resources: [
+                            resources.learningPaths,
+                            resources.continuousLearning
+                        ]
+                    }
+                ]
+            }
+        ],
+        
+        // Sectie 2: Didactiek
+        section2: [
+            {
+                questionId: 'I1',
+                recommendations: [
+                    {
+                        title: "Meerwaarde aantonen",
+                        description: "Maak expliciet duidelijk wat de toegevoegde waarde is van de technologie ten opzichte van traditionele leermiddelen. Toon concrete voorbeelden van verbeterde leerresultaten.",
+                        resources: [
+                            resources.educationalValue,
+                            resources.effectivenessMeasurement
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'I2',
+                recommendations: [
+                    {
+                        title: "Multisensorieel leren optimaliseren",
+                        description: "Zorg voor een evenwichtige inzet van zintuiglijke prikkels die het leren ondersteunen zonder af te leiden. Vermijd overdaad aan visuele of auditieve prikkels.",
+                        resources: [
+                            resources.multisensoryLearning,
+                            resources.learningStyles
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'I3',
+                recommendations: [
+                    {
+                        title: "Inhoud valideren",
+                        description: "Laat de inhoud controleren door vakdeskundigen op juistheid, volledigheid en actualiteit. Zorg voor regelmatige updates.",
+                        resources: [
+                            resources.contentValidation,
+                            resources.expertReview
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'I4',
+                recommendations: [
+                    {
+                        title: "Cognitieve belasting beheren",
+                        description: "Pas de hoeveelheid informatie en complexiteit van opdrachten aan aan het niveau van de gebruiker. Houd rekening met de cognitieve belasting.",
+                        resources: [
+                            resources.cognitiveLoad,
+                            resources.informationDosing
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'I5',
+                recommendations: [
+                    {
+                        title: "Leeractiviteiten afstemmen",
+                        description: "Zorg voor een duidelijke koppeling tussen de leeractiviteiten en de leerdoelen. Vermijd overbodige of niet-relevante oefeningen.",
+                        resources: [
+                            resources.learningActivities,
+                            resources.targetedExercises
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'I6',
+                recommendations: [
+                    {
+                        title: "Leerroute structureren",
+                        description: "Zorg voor een logische opbouw in de leerstof en voorkom dat gebruikers essentiële onderdelen kunnen overslaan. Gebruik eventueel een verplichte volgorde of voortgangscontroles.",
+                        resources: [
+                            resources.learningPathDesign,
+                            resources.adaptiveLearning
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'I7',
+                recommendations: [
+                    {
+                        title: "Voorkennis activeren",
+                        description: "Start met het ophalen van relevante voorkennis voordat nieuwe stof wordt aangeboden. Gebruik hiervoor bijvoorbeeld vragen, casussen of korte opdrachten.",
+                        resources: [
+                            resources.priorKnowledge,
+                            resources.scaffolding
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'I8',
+                recommendations: [
+                    {
+                        title: "Ondersteuning op maat bieden",
+                        description: "Voorzie in extra uitleg of oefeningen voor gebruikers die bepaalde voorkennis missen. Dit kan via een aparte hulpfunctie of extra oefenmodule.",
+                        resources: [
+                            { title: "Differentiatie in de les", url: "#" },
+                            { title: "Remediërende oefeningen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'I9',
+                recommendations: [
+                    {
+                        title: "Hulpmiddelen versterken",
+                        description: "Bied verschillende vormen van ondersteuning aan, zoals stap-voor-stap instructies, video's, of voorbeelden. Houd rekening met verschillende leerstijlen.",
+                        resources: [
+                            { title: "Meervoudige intelligentie", url: "#" },
+                            { title: "Leerstijlen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'I10',
+                recommendations: [
+                    {
+                        title: "Adaptieve ondersteuning implementeren",
+                        description: "Pas het niveau van ondersteuning automatisch aan op basis van de prestaties van de gebruiker. Verminder geleidelijk aan de hulp naarmate de gebruiker vaardiger wordt.",
+                        resources: [
+                            { title: "Adaptief leren", url: "#" },
+                            { title: "Scaffolding technieken", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'I11',
+                recommendations: [
+                    {
+                        title: "Aanpasbaarheid verbeteren",
+                        description: "Zorg voor een eenvoudig te bedienen interface waarmee docenten de leerroute kunnen aanpassen aan de behoeften van individuele leerlingen of groepen.",
+                        resources: [
+                            { title: "Differentiatie in de klas", url: "#" },
+                            { title: "Leerlingvolgsystemen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'I12',
+                recommendations: [
+                    {
+                        title: "Aanpasbaarheid verbeteren",
+                        description: "Stel jezelf de vraag: Kan mijn gekozen vorm in deze context het doel halen voor deze doelgroep? Zo niet ,pas de vorm aan (bijvoorbeeld door het compacter, interactiever of flexibeler te maken).",
+                        resources: [
+                            { title: "Differentiatie in de klas", url: "#" },
+                            { title: "Leerlingvolgsystemen", url: "#" }
+                        ]
+                    }
+                ]
+            }
+        ],
+        
+        // Sectie 3: Leermechanismen
+        section3: [
+            {
+                questionId: 'M1',
+                recommendations: [
+                    {
+                        title: "Leerprocessen versterken",
+                        description: "Zorg voor een duidelijke koppeling tussen de activiteiten in de applicatie en de gewenste leerprocessen. Gebruik evidence-based leerstrategieën.",
+                        resources: [
+                            { title: "Effectieve leerstrategieën", url: "#" },
+                            { title: "Evidence-based onderwijs", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'M2',
+                recommendations: [
+                    {
+                        title: "Nadelige effecten minimaliseren",
+                        description: "Voer gebruikerstesten uit om eventuele negatieve effecten zoals desoriëntatie of motion sickness te identificeren en los deze op. Bied eventueel aanpassingsmogelijkheden aan.",
+                        resources: [
+                            { title: "VR-gebruik optimaliseren", url: "#" },
+                            { title: "Motion sickness voorkomen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'M3',
+                recommendations: [
+                    {
+                        title: "Samenwerking faciliteren",
+                        description: "Integreer mogelijkheden voor samenwerking, zoals gezamenlijke opdrachten, peer feedback of discussiefora. Zorg voor duidelijke instructies over de samenwerking.",
+                        resources: [
+                            { title: "Samenwerkend leren", url: "#" },
+                            { title: "Coöperatieve werkvormen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'M4',
+                recommendations: [
+                    {
+                        title: "Meerwaarde van VR benutten",
+                        description: "Maak optimaal gebruik van de unieke mogelijkheden van VR, zoals het simuleren van gevaarlijke of complexe situaties die in het echt niet mogelijk zijn.",
+                        resources: [
+                            { title: "VR in het onderwijs", url: "#" },
+                            { title: "Immersieve leerervaringen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'M5',
+                recommendations: [
+                    {
+                        title: "Voortgang inzichtelijk maken",
+                        description: "Bied duidelijke en gedetailleerde feedback over de voortgang van de gebruiker. Gebruik hiervoor bijvoorbeeld een dashboard met behaalde resultaten en verbeterpunten.",
+                        resources: [
+                            { title: "Formatieve evaluatie", url: "#" },
+                            { title: "Leerlingvolgsystemen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'M6',
+                recommendations: [
+                    {
+                        title: "Feedback verbeteren",
+                        description: "Zorg voor specifieke, constructieve feedback die de gebruiker helpt om zijn/haar aanpak te verbeteren. Richt je zowel op wat goed gaat als op verbeterpunten.",
+                        resources: [
+                            { title: "Effectieve feedback geven", url: "#" },
+                            { title: "Formatieve assessment technieken", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'M7',
+                recommendations: [
+                    {
+                        title: "Aanwezigheidsgevoel versterken",
+                        description: "Optimaliseer de VR-ervaring om het gevoel van aanwezigheid te vergroten. Let hierbij op beeldkwaliteit, geluid en interactiemogelijkheden.",
+                        resources: [
+                            { title: "Presence in VR", url: "#" },
+                            { title: "Immersieve ervaringen ontwerpen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'M8',
+                recommendations: [
+                    {
+                        title: "Perspectief optimaliseren",
+                        description: "Kies het meest geschikte perspectief voor de leerdoelen en zorg ervoor dat dit perspectief bijdraagt aan het leerproces. Overweeg om gebruikers te laten wisselen van perspectief.",
+                        resources: [
+                            { title: "Perspectief in VR", url: "#" },
+                            { title: "Empathie en perspectief", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'M9',
+                recommendations: [
+                    {
+                        title: "Afstand optimaliseren",
+                        description: "Zorg ervoor dat objecten en personen in de virtuele omgeving op een natuurlijke afstand staan die het leren ondersteunt. Houd rekening met het gezichtsveld en de leesbaarheid.",
+                        resources: [
+                            { title: "VR interface design", url: "#" },
+                            { title: "Ergonomie in VR", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'M10',
+                recommendations: [
+                    {
+                        title: "Informatieverdeling optimaliseren",
+                        description: "Toon informatie in behapbare brokken en voorkom overbelasting van het werkgeheugen. Gebruik eventueel een progressieve onthulling van informatie.",
+                        resources: [
+                            { title: "Cognitieve belasting", url: "#" },
+                            { title: "Informatiearchitectuur", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'M11',
+                recommendations: [
+                    {
+                        title: "Virtuele omgeving verrijken",
+                        description: "Zorg voor een realistische en betekenisvolle virtuele omgeving die aansluit bij de leerdoelen. Voeg relevante elementen toe die het leren ondersteunen.",
+                        resources: [
+                            { title: "Virtuele leeromgevingen", url: "#" },
+                            { title: "Authentieke leeromgevingen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'M12',
+                recommendations: [
+                    {
+                        title: "Interactie verbeteren",
+                        description: "Zorg voor betekenisvolle interactiemogelijkheden die bijdragen aan het leerproces. Stimuleer actieve betrokkenheid en het toepassen van kennis.",
+                        resources: [
+                            { title: "Interactie in VR", url: "#" },
+                            { title: "Actief leren", url: "#" }
+                        ]
+                    }
+                ]
+            }
+        ],
+        
+        // Sectie 4: Effecten
+        section4: [
+            {
+                questionId: 'O1',
+                recommendations: [
+                    {
+                        title: "Leerervaring verrijken",
+                        description: "Verzamel feedback van gebruikers om de leerervaring te verbeteren. Besteed aandacht aan zowel cognitieve als affectieve aspecten van het leren.",
+                        resources: [
+                            { title: "Leerbeleving optimaliseren", url: "#" },
+                            { title: "Motivatie verhogen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'O2',
+                recommendations: [
+                    {
+                        title: "Evaluatie verbeteren",
+                        description: "Zorg voor duidelijke criteria en methoden om te bepalen of de leerdoelen zijn behaald. Gebruik hiervoor bijvoorbeeld toetsen, observaties of producten.",
+                        resources: [
+                            { title: "Toetsen en evalueren", url: "#" },
+                            { title: "Leerdoelen toetsen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'O3',
+                recommendations: [
+                    {
+                        title: "Evaluatie afstemmen",
+                        description: "Zorg voor een nauwe aansluiting tussen de leerdoelen en de evaluatie. Gebruik verschillende soorten evaluatie die passen bij de aard van de leerdoelen.",
+                        resources: [
+                            { title: "Constructive alignment", url: "#" },
+                            { title: "Toetsmatrijs opstellen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'O4',
+                recommendations: [
+                    {
+                        title: "Conceptueel begrip versterken",
+                        description: "Gebruik visuele representaties, interactieve simulaties en concrete voorbeelden om abstracte concepten begrijpelijker te maken.",
+                        resources: [
+                            { title: "Conceptueel leren", url: "#" },
+                            { title: "Visualisaties in onderwijs", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'O5',
+                recommendations: [
+                    {
+                        title: "Alternatieve beoordelingsvormen",
+                        description: "Maak gebruik van de unieke mogelijkheden van VR om vaardigheden en inzichten te beoordelen die met traditionele methoden moeilijk te meten zijn.",
+                        resources: [
+                            { title: "Alternatieve toetsvormen", url: "#" },
+                            { title: "Vaardigheden beoordelen", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'O6',
+                recommendations: [
+                    {
+                        title: "Docentinformatie verbeteren",
+                        description: "Bied docenten gedetailleerde informatie over de voortgang en prestaties van studenten, zodat zij hun begeleiding hierop kunnen afstemmen.",
+                        resources: [
+                            { title: "Data-gedreven onderwijs", url: "#" },
+                            { title: "Learning analytics", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'O7',
+                recommendations: [
+                    {
+                        title: "Meerwaarde benadrukken",
+                        description: "Maak expliciet welke voordelen het gebruik van VR biedt ten opzichte van traditionele methoden, bijvoorbeeld op het gebied van veiligheid of kosten.",
+                        resources: [
+                            { title: "Kosten-batenanalyse", url: "#" },
+                            { title: "ROI van educatieve technologie", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'O8',
+                recommendations: [
+                    {
+                        title: "21e-eeuwse vaardigheden integreren",
+                        description: "Benoem expliciet welke generieke vaardigheden worden ontwikkeld en bied mogelijkheden om deze te oefenen en te reflecteren.",
+                        resources: [
+                            { title: "21e-eeuwse vaardigheden", url: "#" },
+                            { title: "Burgerschapsvorming", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'O9',
+                recommendations: [
+                    {
+                        title: "Risico's minimaliseren",
+                        description: "Identificeer mogelijke negatieve effecten van het gebruik van de applicatie en neem maatregelen om deze te voorkomen of te beperken.",
+                        resources: [
+                            { title: "Ethische aspecten van VR", url: "#" },
+                            { title: "Veilig gebruik van technologie", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'O10',
+                recommendations: [
+                    {
+                        title: "Transfer bevorderen",
+                        description: "Zorg voor voldoende oefening in verschillende contexten en stimuleer het bewustzijn van overeenkomsten tussen de virtuele en fysieke wereld.",
+                        resources: [
+                            { title: "Transfer van leren", url: "#" },
+                            { title: "Toepassen in nieuwe situaties", url: "#" }
+                        ]
+                    }
+                ]
+            },
+            {
+                questionId: 'O11',
+                recommendations: [
+                    {
+                        title: "Generalisatie stimuleren",
+                        description: "Bied gevarieerde oefensituaties aan en moedig studenten aan om verbanden te leggen met andere contexten. Gebruik reflectievragen om het generaliseren te bevorderen.",
+                        resources: [
+                            { title: "Generalisatie in leren", url: "#" },
+                            { title: "Dieper leren stimuleren", url: "#" }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+};
+
 // Data object containing all questions for the questionnaire
-const questionnaireData = {
+window.questionnaireData = {
     sections: [
         {
             id: 'section1',
@@ -85,7 +891,7 @@ const questionnaireData = {
                 },
                 {
                     id: 'I4',
-                    text: 'Inhoud en activiteiten worden goed gedoseerd aangeboden, in balans met wat de gebruiker aan kan (geen cognitieve overbelasting).',
+                    text: 'De activiteiten binnen de applicatie worden goed gedoseerd aangeboden, zodat de gebruiker niet overvraagd wordt (geen cognitieve overbelasting).',
                     type: 'likert'
                 },
                 {
@@ -122,7 +928,13 @@ const questionnaireData = {
                     id: 'I11',
                     text: 'Als er sprake is van een leerroute in de applicatie, dan kan de leraar deze op eenvoudige wijze aanpassen qua moeilijkheid en/of tempo.',
                     type: 'likert'
+                },
+                {
+                    id: 'I12',
+                    text: 'De gekozen technologie past bij doel, doelgroep en context waarin de applicatie ingezet wordt.',
+                    type: 'likert'
                 }
+                
             ]
         },
         {
@@ -275,7 +1087,18 @@ const questionnaireData = {
     ]
 };
 
-// Export the data for use in other files
+// Make the data available globally
+if (typeof window !== 'undefined') {
+    window.QuestionnaireData = {
+        questionnaireData: window.questionnaireData,
+        recommendations: window.recommendations
+    };
+}
+
+// For Node.js/CommonJS environments
 if (typeof module !== 'undefined' && module.exports) {
-    module.exports = questionnaireData;
+    module.exports = {
+        questionnaireData: window.questionnaireData,
+        recommendations: window.recommendations
+    };
 }

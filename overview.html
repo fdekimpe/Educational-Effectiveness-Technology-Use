@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Volledig overzicht vragen en aanbevelingen</title>
+    <script src="data.js"></script>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+        h1, h2, h3 {
+            color: #2c3e50;
+        }
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+        h2 {
+            margin-top: 40px;
+            padding-bottom: 5px;
+            border-bottom: 1px solid #ddd;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            font-size: 0.95em;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 12px 15px;
+            text-align: left;
+            vertical-align: top;
+        }
+        th {
+            background-color: #3498db;
+            color: white;
+            font-weight: bold;
+            position: sticky;
+            top: 0;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+        .question-cell {
+            min-width: 300px;
+            width: 40%;
+        }
+        .recommendation {
+            margin-bottom: 15px;
+        }
+        .recommendation:last-child {
+            margin-bottom: 0;
+        }
+        .resources {
+            font-size: 0.9em;
+            color: #555;
+            margin-top: 8px;
+            padding-left: 5px;
+            border-left: 3px solid #3498db;
+        }
+        .resource {
+            display: block;
+            margin: 5px 0;
+            padding: 3px 0;
+        }
+        .resource a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+        .resource a:hover {
+            text-decoration: underline;
+        }
+        .page-break {
+            page-break-before: always;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 1px solid #eee;
+        }
+        .no-recommendation {
+            font-style: italic;
+            color: #777;
+        }
+        .toc {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 5px;
+            margin-bottom: 30px;
+        }
+        .toc ol {
+            padding-left: 20px;
+        }
+        .toc a {
+            color: #2980b9;
+            text-decoration: none;
+        }
+        .toc a:hover {
+            text-decoration: underline;
+        }
+        @media print {
+            body {
+                padding: 0;
+                font-size: 11pt;
+            }
+            .page-break {
+                page-break-before: always;
+                margin-top: 20px;
+                padding-top: 20px;
+            }
+            .no-print {
+                display: none;
+            }
+            a {
+                color: #000;
+                text-decoration: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h1>Volledig overzicht vragen en aanbevelingen</h1>
+    
+    <div id="toc" class="toc">
+        <h3>Inhoudsopgave</h3>
+        <ol id="toc-list">
+            <!-- Wordt ingevuld door JavaScript -->
+        </ol>
+    </div>
+    
+    <div id="content">
+        <!-- Wordt ingevuld door JavaScript -->
+    </div>
+
+    <script>
+        // Wacht tot de pagina volledig is geladen
+        document.addEventListener('DOMContentLoaded', function() {
+            const tocList = document.getElementById('toc-list');
+            const content = document.getElementById('content');
+            
+            // Functie om een HTML-fragment te maken voor een enkele aanbeveling
+            function createRecommendationHTML(recommendation) {
+                if (!recommendation) return '';
+                
+                let resourcesHTML = '';
+                if (recommendation.resources && recommendation.resources.length > 0) {
+                    resourcesHTML = `
+                        <div class="resources">
+                            ${recommendation.resources.map(resource => {
+                                const title = resource.title || resource;
+                                const url = resource.url || '#';
+                                return `<span class="resource">• <a href="${url}" target="_blank">${title}</a></span>`;
+                            }).join('')}
+                        </div>`;
+                }
+                
+                return `
+                    <div class="recommendation">
+                        <strong>${recommendation.title}</strong><br>
+                        ${recommendation.description}
+                        ${resourcesHTML}
+                    </div>`;
+            }
+
+            // Genereer de inhoud voor elke sectie
+            window.questionnaireData.sections.forEach(section => {
+                const sectionNumber = section.id.replace('section', '');
+                const sectionRecommendations = window.recommendations.sectionSpecific[section.id] || [];
+                
+                // Voeg toe aan inhoudsopgave
+                const tocItem = document.createElement('li');
+                const tocLink = document.createElement('a');
+                tocLink.href = `#sectie${sectionNumber}`;
+                tocLink.textContent = section.title;
+                tocItem.appendChild(tocLink);
+                tocList.appendChild(tocItem);
+                
+                // Maak een mapping van questionId naar aanbevelingen
+                const recommendationsMap = new Map();
+                sectionRecommendations.forEach(item => {
+                    if (item.questionId && item.recommendations) {
+                        recommendationsMap.set(item.questionId, item.recommendations);
+                    }
+                });
+                
+                // Maak de sectie
+                const sectionElement = document.createElement('div');
+                sectionElement.className = 'page-break';
+                sectionElement.id = `sectie${sectionNumber}`;
+                
+                let sectionHTML = `
+                    <h2>${section.title}</h2>
+                    <p>${section.description}</p>
+                    
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Vraag ID</th>
+                                <th>Vraag</th>
+                                <th>Aanbevelingen</th>
+                            </tr>
+                        </thead>
+                        <tbody>`;
+                
+                // Voeg vragen toe
+                section.questions.forEach(question => {
+                    const questionId = question.id;
+                    const questionRecommendations = recommendationsMap.get(questionId) || [];
+                    
+                    let recommendationsHTML = '';
+                    if (questionRecommendations.length > 0) {
+                        recommendationsHTML = questionRecommendations.map(rec => 
+                            createRecommendationHTML(rec)
+                        ).join('');
+                    } else {
+                        recommendationsHTML = '<div class="no-recommendation">Geen specifieke aanbevelingen beschikbaar</div>';
+                    }
+                    
+                    sectionHTML += `
+                        <tr>
+                            <td>${questionId}</td>
+                            <td class="question-cell">${question.text}</td>
+                            <td>${recommendationsHTML}</td>
+                        </tr>`;
+                });
+                
+                sectionHTML += `
+                        </tbody>
+                    </table>`;
+                
+                sectionElement.innerHTML = sectionHTML;
+                content.appendChild(sectionElement);
+            });
+            
+            // Voeg eventueel extra secties toe (zoals toelichting)
+            const toelichting = `
+                <div class="page-break" id="toelichting">
+                    <h2>Toelichting bij het gebruik van dit document</h2>
+                    
+                    <h3>Doel van dit document</h3>
+                    <p>Dit document biedt een volledig overzicht van alle vragen uit de vragenlijst, gevolgd door specifieke aanbevelingen voor verbetering wanneer een vraag laag scoort (1-3 op een schaal van 1-5).</p>
+                    
+                    <h3>Hoe dit document te gebruiken</h3>
+                    <p>Dit document is bedoeld als naslagwerk bij het analyseren van de resultaten van de vragenlijst. Per vraag zijn er specifieke aanbevelingen opgenomen die kunnen helpen bij het verbeteren van de applicatie.</p>
+                    
+                    <h3>Algemene aanbevelingen</h3>
+                    <ul>
+                        <li>Focus op de vragen met de laagste scores om de meeste winst te behalen</li>
+                        <li>Betrek collega's bij het doorvoeren van verbeteringen voor breder draagvlak</li>
+                        <li>Plan evaluatiemomenten in om het effect van doorgevoerde verbeteringen te meten</li>
+                    </ul>
+                    
+                    <h3>Overzicht secties:</h3>
+                    <ol>
+                        <li><strong>Deel 1. Doelgerichtheid</strong>: Richt zich op de duidelijkheid en relevantie van de leerdoelen en doelgroep.</li>
+                        <li><strong>Deel 2. Didactiek</strong>: Gaat in op de inhoud en presentatie van het leermateriaal.</li>
+                        <li><strong>Deel 3. Leermechanismen</strong>: Behandelt de processen die het leren bevorderen.</li>
+                        <li><strong>Deel 4. Effecten</strong>: Richt zich op de uitkomsten en impact van het leren.</li>
+                    </ol>
+                    
+                    <h3>Contact</h3>
+                    <p>Voor vragen of opmerkingen over dit document of de vragenlijst, neem contact op met de afdeling Onderwijskwaliteit.</p>
+                </div>`;
+                
+            content.insertAdjacentHTML('beforeend', toelichting);
+        });
+    </script>
+</body>
+</html>

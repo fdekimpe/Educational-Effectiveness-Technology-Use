@@ -15,38 +15,29 @@ class QuestionnaireApp {
             progressText: document.getElementById('progress-text'),
             summary: document.getElementById('summary'),
             answersSummary: document.getElementById('answers-summary'),
-            exportCsv: document.getElementById('exportCsv'),
             exportExcel: document.getElementById('exportExcel'),
             exportPdf: document.getElementById('exportPdf'),
             newResponse: document.getElementById('newResponse'),
             startBtn: document.getElementById('startBtn'),
             diceRadios: document.querySelectorAll('input[name="dice"]'),
             diceOtherSection: document.getElementById('diceOtherSection'),
-            diceOther: document.getElementById('diceOther')
+            diceOther: document.getElementById('diceOther'),
+            sectionDropdown: document.getElementById('sectionDropdown'),
+            currentSectionText: document.getElementById('current-section'),
+            sectionNavItems: document.querySelectorAll('.section-nav')
         };
 
-        // Initialize the app
+        // Initialize the app state
         this.currentSectionIndex = 0;
         this.currentQuestionIndex = 0;
         this.answers = {};
         this.totalQuestions = this.calculateTotalQuestions();
-        
-        // Bind event listeners
-        this.bindEvents();
-        
-        // Load saved progress if available
-        this.loadProgress();
-
-        // Initialize the app
-        this.currentSectionIndex = 0;
-        this.currentQuestionIndex = 0;
-        this.answers = {};
-        this.totalQuestions = this.calculateTotalQuestions();
+        this.isNavigating = false;
         
         // Bind methods
         this.setupAutoAdvance = this.setupAutoAdvance.bind(this);
         
-        // Bind event listeners
+        // Setup event listeners
         this.bindEvents();
         
         // Load saved progress if available
@@ -54,7 +45,7 @@ class QuestionnaireApp {
         
         // Setup auto-advance
         this.setupAutoAdvance();
-        }
+    }
     
     // Calculate total number of questions
     calculateTotalQuestions() {
@@ -133,15 +124,12 @@ class QuestionnaireApp {
             let totalScore = 0;
             let answeredQuestions = 0;
             
-            // Show content and hide loading
-            loadingEl.style.display = 'none';
-            contentEl.style.display = 'block';
-            
             section.questions.forEach(question => {
                 const answer = this.answers[question.id];
                 if (answer) {
                     sectionAnswers.push({
-                        question: question.text,
+                        id: question.id,
+                        text: question.text,
                         answer: this.getLikertLabel(answer),
                         score: answer
                     });
@@ -173,104 +161,69 @@ class QuestionnaireApp {
                 html += `
                     <div class="list-group-item ${scoreClass}">
                         <div class="d-flex justify-content-between align-items-center">
-                            <div>${item.question}</div>
+                            <div>${item.text}</div>
                             <span class="badge bg-primary rounded-pill">${item.answer}</span>
                         </div>
                     </div>
                 `;
             });
             
-            // Add recommendations
+            // Add recommendations section
             html += `
                     </div>
                     <div class="recommendations">
                         <h6>Aanbevelingen:</h6>
-                        <ul class="list-unstyled">
             `;
             
-            // Generate specific recommendations based on lowest scoring questions
-            const lowScoringQuestions = section.questions
-                .map((q, i) => ({
-                    question: q,
-                    score: this.answers[q.id] || 0,
-                    index: i
-                }))
-                .filter(q => q.score > 0 && q.score <= 3) // Filter on scores 3 or lower
-                .sort((a, b) => a.score - b.score); // Sort by score (lowest first)
+            // Get low scoring questions (scores 1-3)
+            const lowScoringQuestions = sectionAnswers
+                .filter(item => item.score > 0 && item.score <= 3)
+                .sort((a, b) => a.score - b.score);
 
             if (lowScoringQuestions.length > 0) {
-                // Get top 3 lowest scoring questions
-                const topIssues = lowScoringQuestions.slice(0, 3);
-                
+                // Show specific recommendations for low scoring questions
                 html += `
                     <div class="alert alert-warning">
                         <h6><i class="fas fa-exclamation-triangle me-2"></i>Aandachtspunten:</h6>
                         <ul class="mb-0">
                 `;
                 
-                topIssues.forEach(item => {
-                    const questionText = item.question.text;
-                    const score = item.score;
-                    let recommendation = '';
+                // Show top 3 lowest scoring questions with recommendations
+                lowScoringQuestions.slice(0, 3).forEach(item => {
+                    // Get the correct section ID (using the section's actual ID from questionnaireData)
+                    const sectionId = section.id; // e.g., 'section1', 'section2', etc.
                     
-                    // Generate specific recommendations based on question content with resources
-                    if (questionText.includes('gebruiksvriendelijk')) {
-                        recommendation = `Overweeg een gebruiksvriendelijkheidstest met de doelgroep en pas de interface aan op basis van hun feedback.
-                            <div class="mt-2 small text-muted">
-                                <i class="fas fa-book me-1"></i> Bronnen:
-                                <a href="https://www.usability.gov/what-and-why/user-research.html" target="_blank" class="ms-1">Usability.gov - User Research Basics</a> | 
-                                <a href="https://www.nngroup.com/articles/usability-101-introduction-to-usability/" target="_blank" class="ms-1">NN/g - Usability 101</a>
-                            </div>`;
-                    } 
-                    else if (questionText.includes('instructie') || questionText.includes('handleiding')) {
-                        recommendation = `Voeg duidelijke instructies toe, bij voorkeur met visuele ondersteuning of een korte handleiding.
-                            <div class="mt-2 small text-muted">
-                                <i class="fas fa-book me-1"></i> Bronnen:
-                                <a href="https://www.instructionaldesign.org/theories/instructional-design/" target="_blank" class="ms-1">Instructional Design Models</a> | 
-                                <a href="https://www.cmu.edu/teaching/designteach/design/instructionalstrategies/" target="_blank" class="ms-1">Carnegie Mellon - Instructional Strategies</a>
-                            </div>`;
-                    }
-                    else if (questionText.includes('leerdoel') || questionText.includes('doelstelling')) {
-                        recommendation = `Maak de leerdoelen specifieker en meetbaarder. Zorg dat ze aansluiten bij de belevingswereld van de studenten.
-                            <div class="mt-2 small text-muted">
-                                <i class="fas fa-book me-1"></i> Bronnen:
-                                <a href="https://cft.vanderbilt.edu/guides-sub-pages/writing-learning-outcomes/" target="_blank" class="ms-1">Vanderbilt - Writing Learning Outcomes</a> | 
-                                <a href="https://www.queensu.ca/teachingandlearning/modules/objectives/04_smart_objectives.html" target="_blank" class="ms-1">Queen's University - SMART Objectives</a>
-                            </div>`;
-                    }
-                    else if (questionText.includes('doelgroep')) {
-                        recommendation = `Verken de specifieke behoeften en voorkeuren van je doelgroep. Overweeg een korte enquête of focusgroep.
-                            <div class="mt-2 small text-muted">
-                                <i class="fas fa-book me-1"></i> Bronnen:
-                                <a href="https://www.nea.org/professional-excellence/student-engagement/tools-tips/understanding-your-students-and-their" target="_blank" class="ms-1">NEA - Understanding Your Students</a> | 
-                                <a href="https://www.celt.iastate.edu/teaching/teaching-format/14-teaching-presenting-like-a-pro-tips/" target="_blank" class="ms-1">Iowa State - Teaching to Different Learning Styles</a>
-                            </div>`;
-                    }
-                    else if (questionText.includes('feedback') || questionText.includes('terugkoppeling')) {
-                        recommendation = `Implementeer een systeem voor directe feedback en gelegenheid tot oefening met correcties.
-                            <div class="mt-2 small text-muted">
-                                <i class="fas fa-book me-1"></i> Bronnen:
-                                <a href="https://www.celt.iastate.edu/teaching/effective-teaching-practices/feedback/" target="_blank" class="ms-1">Iowa State - Effective Feedback</a> | 
-                                <a href="https://teaching.cornell.edu/teaching-resources/assessment-evaluation/feedback-improves-learning" target="_blank" class="ms-1">Cornell - Feedback for Learning</a>
-                            </div>`;
-                    }
-                    else {
-                        // Default recommendation with general resources
-                        recommendation = `Bespreek dit specifieke punt met collega's en betrek eventueel studenten bij het vinden van verbeteringen.
-                            <div class="mt-2 small text-muted">
-                                <i class="fas fa-book me-1"></i> Algemene bronnen:
-                                <a href="https://www.celt.iastate.edu/" target="_blank" class="ms-1">Center for Excellence in Learning and Teaching</a> | 
-                                <a href="https://teaching.cornell.edu/teaching-resources" target="_blank" class="ms-1">Cornell Teaching Resources</a>
-                            </div>`;
-                    }
+                    // Find recommendations for this question
+                    console.log('Getting recommendations for:', { sectionId, questionId: item.id });
+                    const questionRecs = this.getRecommendationsForQuestion(sectionId, item.id);
                     
                     html += `
-                        <li class="mb-2">
-                            <strong>${item.question.id}. ${item.question.text}</strong><br>
-                            <em>Score: ${score}/5</em><br>
-                            ${recommendation}
-                        </li>
+                        <li class="mb-3">
+                            <strong>${item.id}. ${item.text}</strong><br>
+                            <em>Score: ${item.score}/5</em>
                     `;
+                    
+                    if (questionRecs && questionRecs.length > 0) {
+                        questionRecs.forEach(rec => {
+                            html += `
+                                <div class="mt-2">
+                                    <strong>${rec.title}:</strong> ${rec.description}
+                                    ${this.formatResources(rec.resources)}
+                                </div>
+                            `;
+                        });
+                    } else {
+                        // Fallback to general recommendation if no specific ones found
+                        html += `
+                            <div class="mt-2">
+                                <strong>Algemene aanbeveling:</strong> 
+                                Bespreek dit specifieke punt met collega's en betrek eventueel studenten bij het vinden van verbeteringen.
+                                ${this.formatResources()}
+                            </div>
+                        `;
+                    }
+                    
+                    html += `</li>`;
                 });
                 
                 html += `
@@ -278,30 +231,9 @@ class QuestionnaireApp {
                     </div>
                 `;
                 
-                // Add general improvement tips if there are multiple low scores
+                // Add general improvement tips if multiple low scores
                 if (lowScoringQuestions.length >= 2) {
-                    html += `
-                    <div class="alert alert-info mt-3">
-                        <h6><i class="fas fa-lightbulb me-2"></i>Algemene tips voor verbetering:</h6>
-                        <ul class="mb-0">
-                            <li>Organiseer een evaluatie met een kleine gebruikersgroep om specifieke pijnpunten te identificeren.
-                                <div class="mt-1 small">
-                                    <a href="https://www.nngroup.com/articles/why-you-only-need-to-test-with-5-users/" target="_blank" class="text-muted"><i class="fas fa-external-link-alt me-1"></i>Waarom testen met 5 gebruikers voldoende is</a>
-                                </div>
-                            </li>
-                            <li>Overweeg een training of workshop over effectieve onderwijsstrategieën voor dit onderwerp.
-                                <div class="mt-1 small">
-                                    <a href="https://www.advance-he.ac.uk/teaching-and-learning" target="_blank" class="text-muted"><i class="fas fa-external-link-alt me-1"></i>Advance HE - Teaching and Learning</a>
-                                </div>
-                            </li>
-                            <li>Verzamel regelmatig feedback van studenten en pas je aanpak hierop aan.
-                                <div class="mt-1 small">
-                                    <a href="https://teaching.cornell.edu/teaching-resources/assessment-evaluation/early-semester-feedback" target="_blank" class="text-muted"><i class="fas fa-external-link-alt me-1"></i>Vroege feedback verzamelen</a>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
-                    `;
+                    html += this.getGeneralRecommendations();
                 }
             } else if (averageScore < 4) {
                 // If no specific low scores but average could be better
@@ -309,21 +241,19 @@ class QuestionnaireApp {
                     <div class="alert alert-info">
                         <h6><i class="fas fa-lightbulb me-2"></i>Suggesties voor verdere verbetering:</h6>
                         <ul class="mb-0">
-                            <li>Overweeg om met collega's te sparren over mogelijke verbeteringen.
-                                <div class="mt-1 small">
-                                    <a href="https://www.facultyfocus.com/articles/effective-teaching-strategies/peer-observation-of-teaching-improving-teaching-practices/" target="_blank" class="text-muted"><i class="fas fa-external-link-alt me-1"></i>Effectieve peer-observatie</a>
-                                </div>
-                            </li>
-                            <li>Verzamel feedback van studenten over hun ervaringen.
-                                <div class="mt-1 small">
-                                    <a href="https://www.ideaedu.org/" target="_blank" class="text-muted"><i class="fas fa-external-link-alt me-1"></i>IDEA - Student Ratings of Instruction</a>
-                                </div>
-                            </li>
-                            <li>Blijf je verdiepen in nieuwe onderwijsmethoden en -technieken.
-                                <div class="mt-1 small">
-                                    <a href="https://www.insidehighered.com/teaching-and-learning" target="_blank" class="text-muted"><i class="fas fa-external-link-alt me-1"></i>Inside Higher Ed - Teaching and Learning</a>
-                                </div>
-                            </li>
+                `;
+                
+                // Show general tips for improvement
+                recommendations.generalTips.forEach(tip => {
+                    html += `
+                        <li class="mb-2">
+                            <strong>${tip.title}:</strong> ${tip.description}
+                            ${this.formatResources(tip.resources)}
+                        </li>
+                    `;
+                });
+                
+                html += `
                         </ul>
                     </div>
                 `;
@@ -338,7 +268,6 @@ class QuestionnaireApp {
             }
             
             html += `
-                        </ul>
                     </div>
                 </div>
             `;
@@ -354,6 +283,81 @@ class QuestionnaireApp {
         }, 800); // Simulate processing time
     }
     
+    // Helper method to get recommendations for a specific question
+    getRecommendationsForQuestion(sectionId, questionId) {
+        console.log('Looking for recommendations for:', { sectionId, questionId });
+        
+        // Controleer of de sectie bestaat in de recommendations
+        if (!recommendations?.sectionSpecific?.[sectionId]) {
+            console.log('No recommendations found for section:', sectionId);
+            return [];
+        }
+        
+        const sectionRecs = recommendations.sectionSpecific[sectionId];
+        console.log('Section recommendations:', sectionRecs);
+        
+        // Zoek naar de specifieke vraag in de sectie-aanbevelingen
+        const questionRecs = sectionRecs.find(item => item.questionId === questionId);
+        console.log('Found recommendations for question:', questionRecs);
+        
+        // Als er specifieke aanbevelingen zijn, retourneer die, anders retourneer een lege array
+        return questionRecs?.recommendations || [];
+    }
+    
+    // Helper method to format resources as HTML
+    formatResources(resources = []) {
+        if (!resources || resources.length === 0) {
+            return '';
+        }
+        
+        console.log('Formatting resources:', resources);
+        
+        // Als resources een array van strings is (oude formaat), converteer dit naar het nieuwe formaat
+        const formattedResources = resources.map(resource => {
+            if (typeof resource === 'string') {
+                return { title: resource, url: '#' };
+            }
+            return resource;
+        });
+        
+        return `
+            <div class="mt-1 small text-muted">
+                <i class="fas fa-book me-1"></i> Bronnen:
+                <ul class="list-unstyled ms-3 mt-1">
+                    ${formattedResources.map(resource => {
+                        const title = resource.title || resource;
+                        const url = resource.url || '#';
+                        return `<li><a href="${url}" target="_blank" class="text-primary">${title}</a></li>`;
+                    }).join('')}
+                </ul>
+            </div>
+        `;
+    }
+    
+    // Get general recommendations
+    getGeneralRecommendations() {
+        // Ensure recommendations and generalTips exist before mapping
+        const tips = (window.recommendations?.generalTips || []);
+        
+        if (tips.length === 0) {
+            return ''; // Return empty string if no tips available
+        }
+        
+        return `
+            <div class="alert alert-info mt-3">
+                <h6><i class="fas fa-lightbulb me-2"></i>Algemene tips voor verbetering:</h6>
+                <ul class="mb-0">
+                    ${tips.map(tip => `
+                        <li class="mb-2">
+                            <strong>${tip.title}:</strong> ${tip.description}
+                            ${this.formatResources(tip.resources || [])}
+                        </li>
+                    `).join('')}
+                </ul>
+            </div>
+        `;
+    }
+    
     // Hide section summary overlay
     hideSectionSummary() {
         const overlay = document.getElementById('ai-summary-overlay');
@@ -365,167 +369,289 @@ class QuestionnaireApp {
     // Bind all event listeners
     bindEvents() {
         // Navigation buttons
-        this.elements.startBtn?.addEventListener('click', () => this.startQuestionnaire());
         this.elements.prevBtn?.addEventListener('click', () => this.navigate(-1));
         this.elements.nextBtn?.addEventListener('click', () => this.navigate(1));
         this.elements.saveBtn?.addEventListener('click', () => this.saveProgress());
-        this.elements.summaryBtn?.addEventListener('click', () => this.showSectionSummary(0));
+        this.elements.summaryBtn?.addEventListener('click', () => this.showSummary());
         this.elements.newResponse?.addEventListener('click', () => this.resetQuestionnaire());
-        
-        // Initialize summary overlay
-        this.setupSummaryOverlay();
-        
+        this.elements.startBtn?.addEventListener('click', () => this.startQuestionnaire());
+
+        // Section navigation
+        this.elements.sectionNavItems?.forEach(item => {
+            item.addEventListener('click', (e) => {
+                e.preventDefault();
+                const sectionIndex = parseInt(item.dataset.section);
+                this.goToSection(sectionIndex);
+                // No need to update text content here as it's handled in goToSection
+                // No need to call updateSectionNavigation here as it's also handled in goToSection
+            });
+        });
+
         // Export buttons
-        this.elements.exportCsv.addEventListener('click', () => this.exportToCsv());
-        this.elements.exportExcel.addEventListener('click', () => this.exportToExcel());
-        this.elements.exportPdf.addEventListener('click', () => this.exportToPdf());
+        this.elements.exportExcel?.addEventListener('click', () => this.exportToExcel());
+        this.elements.exportPdf?.addEventListener('click', () => this.exportToPdf());
         
         // DICE framework radio buttons
-        this.elements.diceRadios.forEach(radio => {
+        this.elements.diceRadios?.forEach(radio => {
             radio.addEventListener('change', (e) => {
-                this.elements.diceOtherSection.style.display = 
-                    e.target.id === 'diceNone' ? 'block' : 'none';
+                if (this.elements.diceOtherSection) {
+                    this.elements.diceOtherSection.style.display = 
+                        e.target.id === 'diceNone' ? 'block' : 'none';
+                }
             });
         });
     }
+
+// Start the questionnaire
+startQuestionnaire() {
+    // Save DICE framework selection
+    const selectedDice = document.querySelector('input[name="dice"]:checked');
+    if (!selectedDice) {
+        alert('Selecteer een optie om aan te geven waarom Immersive Tech wordt overwogen.');
+        return;
+    }
     
-    // Start the questionnaire
-    startQuestionnaire() {
-        // Save DICE framework selection
-        const selectedDice = document.querySelector('input[name="dice"]:checked');
-        if (!selectedDice) {
-            alert('Selecteer een optie uit het DICE-framework of geef aan waarom VR wordt overwogen.');
-            return;
+    this.answers.dice = {
+        value: selectedDice.value,
+        other: selectedDice.id === 'diceNone' ? this.elements.diceOther.value : ''
+    };
+    
+    // Hide intro and show questionnaire
+    this.elements.intro.classList.add('d-none');
+    this.elements.questionnaire.classList.remove('d-none');
+    this.elements.progressContainer.classList.remove('d-none');
+    document.getElementById('section-navigation').classList.remove('d-none');
+    
+    // Initialize dropdown with first section and handle section description
+    if (questionnaireData.sections && questionnaireData.sections.length > 0) {
+        const firstSection = questionnaireData.sections[0];
+        this.elements.currentSectionText.textContent = firstSection.title;
+        
+        // Set the section description
+        const sectionDescription = document.getElementById('section-description');
+        if (sectionDescription) {
+            if (firstSection.description && firstSection.description.trim() !== '') {
+                sectionDescription.textContent = firstSection.description;
+                sectionDescription.style.display = 'block';
+            } else {
+                sectionDescription.textContent = '';
+                sectionDescription.style.display = 'none';
+            }
         }
         
-        this.answers.dice = {
-            value: selectedDice.value,
-            other: selectedDice.id === 'diceNone' ? this.elements.diceOther.value : ''
-        };
+        this.updateSectionNavigation();
+    }
+    
+    this.renderQuestion();
+}
+
+// Navigate between questions
+navigate(direction) {
+    // Prevent multiple clicks
+    if (this.isNavigating) return;
+    this.isNavigating = true;
+    
+    try {
+        // Save current answer before navigating
+        this.saveCurrentAnswer();
         
-        // Hide intro and show questionnaire
-        this.elements.intro.classList.add('d-none');
-        this.elements.questionnaire.classList.remove('d-none');
-        this.elements.progressContainer.classList.remove('d-none');
+        // Calculate new position
+        let newSectionIndex = this.currentSectionIndex;
+        let newQuestionIndex = this.currentQuestionIndex + direction;
         
-        // Show section navigation and progress
-        const sectionNav = document.getElementById('section-navigation');
-        sectionNav.classList.remove('d-none');
-        sectionNav.classList.add('d-flex');
+        // Check if we need to change section
+        const currentSection = questionnaireData.sections[newSectionIndex];
         
-        // Setup section navigation
-        this.setupSectionNavigation();
+        if (newQuestionIndex >= currentSection.questions.length) {
+            // Move to next section
+            newSectionIndex++;
+            newQuestionIndex = 0;
+            
+            // If no more sections, show summary
+            if (newSectionIndex >= questionnaireData.sections.length) {
+                this.showSummary();
+                return;
+            }
+        } else if (newQuestionIndex < 0) {
+            // Move to previous section
+            newSectionIndex--;
+            
+            // If before first section, go to intro
+            if (newSectionIndex < 0) {
+                this.elements.questionnaire.classList.add('d-none');
+                this.elements.progressContainer.classList.add('d-none');
+                this.elements.intro.classList.remove('d-none');
+                this.currentSectionIndex = 0;
+                this.currentQuestionIndex = 0;
+                return;
+            }
+            
+            // Set to last question of previous section
+            const prevSection = questionnaireData.sections[newSectionIndex];
+            newQuestionIndex = prevSection.questions.length - 1;
+        }
         
-        // Hide section description
-        document.getElementById('section-description').classList.add('d-none');
+        // Store the old section index for comparison
+        const oldSectionIndex = this.currentSectionIndex;
         
-        // Show first section and question
-        this.currentSectionIndex = 0;
-        this.currentQuestionIndex = 0;
+        // Update indices
+        this.currentSectionIndex = newSectionIndex;
+        this.currentQuestionIndex = newQuestionIndex;
         
-        // Make sure the questionnaire container is visible
-        this.elements.questionContainer.style.display = 'block';
+        // Always update section navigation when using Next/Previous
+        this.updateSectionNavigation();
         
-        // Show the first question
-        this.renderQuestion();
+        // Check if section actually changed
+        const sectionChanged = newSectionIndex !== oldSectionIndex;
+        if (sectionChanged) {
+            // Update section description when section changes
+            const sectionDescription = document.getElementById('section-description');
+            if (sectionDescription) {
+                const section = questionnaireData.sections[newSectionIndex];
+                if (section && section.description && section.description.trim() !== '') {
+                    sectionDescription.textContent = section.description;
+                    sectionDescription.style.display = 'block';
+                } else {
+                    sectionDescription.textContent = '';
+                    sectionDescription.style.display = 'none';
+                }
+            }
+        }
+        
+        // Update the UI
         this.updateProgress();
         this.updateNavigationButtons();
         
-        // Ensure auto-advance is set up
-        this.setupAutoAdvance();
-    }
-    
-    // Navigate between questions
-    navigate(direction) {
-        // Prevent multiple clicks
-        if (this.isNavigating) return;
-        this.isNavigating = true;
+        // Render the new question
+        this.renderQuestion();
         
-        try {
+        // Ensure the question is scrolled into view
+        const questionElement = document.querySelector('.question');
+        if (questionElement) {
+            questionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        
+        // Reset navigation lock after a short delay
+        setTimeout(() => {
+            this.isNavigating = false;
+        }, 300);
+    } catch (error) {
+        console.error('Error navigating between questions:', error);
+    }
+}
+
+// Render the current question
+renderQuestion() {
+    const section = questionnaireData.sections[this.currentSectionIndex];
+    const question = section.questions[this.currentQuestionIndex];
+    
+    // Update progress
+    this.updateProgress();
+    
+    // Update navigation buttons
+    this.elements.prevBtn.disabled = this.currentSectionIndex === 0 && this.currentQuestionIndex === 0;
+    this.elements.nextBtn.textContent = 
+        this.currentSectionIndex === questionnaireData.sections.length - 1 && 
+        this.currentQuestionIndex === section.questions.length - 1
+            ? 'Afronden' 
+            : 'Volgende';
+    
+    // Create question HTML
+    let html = `
+        <div class="question fade-in">
+            <h4>${question.id}. ${question.text}</h4>
+            <div class="mt-4">
+    `;
+    
+    // Add answer options based on question type
+    if (question.type === 'likert') {
+html += '<div class="likert-scale">';
+questionnaireData.likertOptions.forEach(option => {
+    const isChecked = this.answers[question.id] === option.value ? 'checked' : '';
+    html += `
+        <div class="form-check">
+            <input class="form-check-input answer-radio" type="radio" 
+                   name="${question.id}" id="${question.id}_${option.value}" 
+                   value="${option.value}" ${isChecked}>
+            <label class="form-check-label" for="${question.id}_${option.value}">
+                ${option.value}. ${option.label}
+            </label>
+        </div>
+    `;
+});
+html += '</div>';
+}
+    
+html += `
+            </div>
+            <div class="mt-3 text-muted">
+                Vraag ${this.getQuestionNumber() + 1} van ${this.totalQuestions}
+            </div>
+        </div>
+    `;
+    
+    // Update the DOM
+    this.elements.questionContainer.innerHTML = html;
+}
+
+// Save the current answer
+saveCurrentAnswer() {
+    const currentQuestion = this.getCurrentQuestion();
+    if (!currentQuestion) return;
+    
+    const selectedOption = document.querySelector(`input[name="${currentQuestion.id}"]:checked`);
+    if (selectedOption) {
+        this.answers[currentQuestion.id] = parseInt(selectedOption.value);
+    }
+}
+
+// Setup section navigation
+setupSectionNavigation() {
+    const sectionNavButtons = document.querySelectorAll('.section-nav');
+    
+    sectionNavButtons.forEach((button, index) => {
+        button.addEventListener('click', () => {
             // Save current answer before navigating
             this.saveCurrentAnswer();
             
-            // Calculate new position
-            let newSectionIndex = this.currentSectionIndex;
-            let newQuestionIndex = this.currentQuestionIndex + direction;
-            
-            // Check if we need to change section
-            const currentSection = questionnaireData.sections[newSectionIndex];
-            
-            if (newQuestionIndex >= currentSection.questions.length) {
-                // Move to next section
-                newSectionIndex++;
-                newQuestionIndex = 0;
-                
-                // If no more sections, show summary
-                if (newSectionIndex >= questionnaireData.sections.length) {
-                    this.showSummary();
-                    return;
-                }
-            } else if (newQuestionIndex < 0) {
-                // Move to previous section
-                newSectionIndex--;
-                
-                // If before first section, go to intro
-                if (newSectionIndex < 0) {
-                    this.elements.questionnaire.classList.add('d-none');
-                    this.elements.progressContainer.classList.add('d-none');
-                    this.elements.intro.classList.remove('d-none');
-                    this.currentSectionIndex = 0;
-                    this.currentQuestionIndex = 0;
-                    return;
-                }
-                
-                // Set to last question of previous section
-                const prevSection = questionnaireData.sections[newSectionIndex];
-                newQuestionIndex = prevSection.questions.length - 1;
-            }
-            
-            // Update indices
-            this.currentSectionIndex = newSectionIndex;
-            this.currentQuestionIndex = newQuestionIndex;
-            
-            // Update section navigation if section changed
-            if (newSectionIndex !== this.currentSectionIndex) {
-                this.updateSectionNavigation();
-            }
+            // Update current section and question indices
+            this.currentSectionIndex = index;
+            this.currentQuestionIndex = 0; // Always start at first question of the section
             
             // Update the UI
-            this.updateProgress();
-            this.updateNavigationButtons();
-            
-            // Render the new question
             this.renderQuestion();
-            
-            // Ensure the question is scrolled into view
-            const questionElement = document.querySelector('.question');
-            if (questionElement) {
-                questionElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
-            }
-        } finally {
-            // Reset navigation lock after a short delay
-            setTimeout(() => {
-                this.isNavigating = false;
-            }, 300);
+            this.updateNavigationButtons();
+            this.updateSectionNavigation();
+        });
+    });
+    
+    // Set initial active state
+    this.updateSectionNavigation();
+}
+
+// Update section navigation buttons state
+updateSectionNavigation() {
+    const sectionNavButtons = document.querySelectorAll('.section-nav');
+    sectionNavButtons.forEach((button, index) => {
+        if (index === this.currentSectionIndex) {
+            button.classList.remove('btn-outline-secondary');
+            button.classList.add('btn-primary');
+        } else {
+            button.classList.remove('btn-primary');
+            button.classList.add('btn-outline-secondary');
+        }
+    });
+}
+
+// Get current question object
+getCurrentQuestion() {
+    if (this.currentSectionIndex >= 0 && this.currentSectionIndex < questionnaireData.sections.length) {
+        const section = questionnaireData.sections[this.currentSectionIndex];
+        if (this.currentQuestionIndex >= 0 && this.currentQuestionIndex < section.questions.length) {
+            return section.questions[this.currentQuestionIndex];
         }
     }
-    
-    
-    // Render the current question
-    renderQuestion() {
-        const section = questionnaireData.sections[this.currentSectionIndex];
-        const question = section.questions[this.currentQuestionIndex];
-        
-        // Update progress
-        this.updateProgress();
-        
-        // Update navigation buttons
-        this.elements.prevBtn.disabled = this.currentSectionIndex === 0 && this.currentQuestionIndex === 0;
-        this.elements.nextBtn.textContent = 
-            this.currentSectionIndex === questionnaireData.sections.length - 1 && 
-            this.currentQuestionIndex === section.questions.length - 1
-                ? 'Afronden' 
-                : 'Volgende';
+    return null;
         
         // Create question HTML
         let html = `
@@ -602,6 +728,49 @@ class QuestionnaireApp {
         this.updateSectionNavigation();
     }
     
+    // Go to a specific section
+    goToSection(sectionIndex) {
+        // Save current answer before navigating
+        this.saveCurrentAnswer();
+        
+        // Update current section and reset to first question of the section
+        this.currentSectionIndex = sectionIndex;
+        this.currentQuestionIndex = 0;
+        
+        // Update the section dropdown text and description visibility
+        if (questionnaireData.sections[sectionIndex]) {
+            const section = questionnaireData.sections[sectionIndex];
+            if (this.elements.currentSectionText) {
+                this.elements.currentSectionText.textContent = section.title;
+            }
+            
+            // Update section description visibility
+            const sectionDescription = document.getElementById('section-description');
+            if (sectionDescription) {
+                if (section.description && section.description.trim() !== '') {
+                    sectionDescription.textContent = section.description;
+                    sectionDescription.style.display = 'block';
+                } else {
+                    sectionDescription.style.display = 'none';
+                }
+            }
+        }
+        
+        // Update the UI
+        this.renderQuestion();
+        this.updateNavigationButtons();
+        this.updateSectionNavigation();
+        
+        // Close the dropdown if open (for mobile)
+        const dropdown = document.querySelector('.dropdown-menu');
+        if (dropdown && dropdown.classList.contains('show')) {
+            const dropdownToggle = document.querySelector('[data-bs-toggle="dropdown"]');
+            if (dropdownToggle) {
+                new bootstrap.Dropdown(dropdownToggle).hide();
+            }
+        }
+    }
+    
     // Update section navigation buttons state
     updateSectionNavigation() {
         const sectionNavButtons = document.querySelectorAll('.section-nav');
@@ -609,9 +778,13 @@ class QuestionnaireApp {
             if (index === this.currentSectionIndex) {
                 button.classList.remove('btn-outline-secondary');
                 button.classList.add('btn-primary');
+                // For dropdown items
+                button.classList.add('active');
             } else {
                 button.classList.remove('btn-primary');
                 button.classList.add('btn-outline-secondary');
+                // For dropdown items
+                button.classList.remove('active');
             }
         });
     }
@@ -716,7 +889,7 @@ class QuestionnaireApp {
             });
 
             // Generate AI response
-            let aiResponse = '<h4>AI-analyse van je antwoorden</h4>';
+            let aiResponse = '<h4>Analyse van je antwoorden</h4>';
             
             // Add overall assessment
             aiResponse += '<div class="ai-analysis-section">';
@@ -725,7 +898,7 @@ class QuestionnaireApp {
             if (strengths.length > 0) {
                 aiResponse += '<p><strong>Sterke punten:</strong> ';
                 aiResponse += 'Je scoort vooral goed op ' + strengths.join(', ') + ". ";
-                aiResponse += 'Dit laat zien dat de VR-toepassing op deze gebieden effectief is ingezet.</p>';
+                aiResponse += 'Dit laat zien dat de Immersive Tech-toepassing op deze gebieden effectief is ingezet.</p>';
             }
             
             if (improvements.length > 0) {
@@ -741,8 +914,8 @@ class QuestionnaireApp {
             aiResponse += '<ul>';
             
             if (analysisData.dice.value === 'none' && analysisData.dice.other) {
-                aiResponse += `<li>Je gaf aan dat VR wordt overwogen vanwege: "${analysisData.dice.other}". `;
-                aiResponse += 'Zorg ervoor dat dit specifieke voordeel ook daadwerkelijk wordt gerealiseerd in je VR-toepassing.</li>';
+                aiResponse += `<li>Je gaf aan dat Immersive Tech wordt overwogen vanwege: "${analysisData.dice.other}". `;
+                aiResponse += 'Zorg ervoor dat dit specifieke voordeel ook daadwerkelijk wordt gerealiseerd in je Immersive Tech-toepassing.</li>';
             }
             
             if (strengths.length > 0) {
@@ -851,7 +1024,7 @@ class QuestionnaireApp {
     // Save progress to localStorage
     saveProgress() {
         this.saveCurrentAnswer();
-        localStorage.setItem('vrQuestionnaireProgress', JSON.stringify({
+        localStorage.setItem('QuestionnaireProgress', JSON.stringify({
             answers: this.answers,
             currentSectionIndex: this.currentSectionIndex,
             currentQuestionIndex: this.currentQuestionIndex
@@ -871,7 +1044,7 @@ class QuestionnaireApp {
     
     // Load progress from localStorage
     loadProgress() {
-        const savedData = localStorage.getItem('vrQuestionnaireProgress');
+        const savedData = localStorage.getItem('QuestionnaireProgress');
         if (savedData) {
             try {
                 const { answers, currentSectionIndex, currentQuestionIndex } = JSON.parse(savedData);
@@ -896,7 +1069,7 @@ class QuestionnaireApp {
                 
             } catch (e) {
                 console.error('Error loading saved progress:', e);
-                localStorage.removeItem('vrQuestionnaireProgress');
+                localStorage.removeItem('QuestionnaireProgress');
             }
         }
     }
@@ -915,26 +1088,22 @@ class QuestionnaireApp {
             this.elements.intro.classList.remove('d-none');
             
             // Clear saved progress
-            localStorage.removeItem('vrQuestionnaireProgress');
+            localStorage.removeItem('QuestionnaireProgress');
             
             // Reset DICE selection
-            this.elements.diceRadios.forEach(radio => radio.checked = false);
-            this.elements.diceOtherSection.style.display = 'none';
-            this.elements.diceOther.value = '';
+            this.elements.diceRadios?.forEach(radio => radio.checked = false);
+            if (this.elements.diceOtherSection) {
+                this.elements.diceOtherSection.style.display = 'none';
+                this.elements.diceOther.value = '';
+            }
         }
-    }
-    
-    // Export to CSV
-    exportToCsv() {
-        const csvContent = this.generateCsvContent();
-        this.downloadFile(csvContent, 'vr_vragenlijst_resultaten.csv', 'text/csv');
     }
     
     // Export to Excel
     exportToExcel() {
         const csvContent = this.generateCsvContent();
         const excelContent = '\uFEFF' + csvContent; // Add BOM for Excel
-        this.downloadFile(excelContent, 'vr_vragenlijst_resultaten.xls', 'application/vnd.ms-excel');
+        this.downloadFile(excelContent, 'Immersive-Tech_vragenlijst_resultaten.xls', 'application/vnd.ms-excel');
     }
     
     // Generate CSV content
@@ -975,61 +1144,141 @@ class QuestionnaireApp {
         const { jsPDF } = window.jspdf;
         const doc = new jsPDF();
         
+        // Set document properties
+        doc.setProperties({
+            title: 'Immersive Tech Vragenlijst Resultaten',
+            subject: 'Resultaten van de VR vragenlijst',
+            author: 'Hogeschool Windesheim',
+            keywords: 'Immersive Tech, vragenlijst, resultaten, onderwijs',
+            creator: 'Immersive Tech Vragenlijst Applicatie'
+        });
+        
+        // Add header
+        doc.setDrawColor(41, 98, 255);
+        doc.setFillColor(41, 98, 255);
+        doc.rect(0, 0, 220, 30, 'F');
+        
         // Add title
-        doc.setFontSize(18);
-        doc.text('VR Vragenlijst Resultaten', 14, 22);
-        doc.setFontSize(11);
-        doc.setTextColor(100);
+        doc.setFontSize(20);
+        doc.setTextColor(255, 255, 255);
+        doc.text('Immersive Tech Vragenlijst Resultaten', 105, 20, { align: 'center' });
+        
+        // Add date
+        doc.setFontSize(10);
+        doc.text(`Gegenereerd op: ${new Date().toLocaleDateString('nl-NL', {
+            year: 'numeric',
+            month: 'long',
+            day: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit'
+        })}`, 14, 40);
         
         // Add DICE framework selection
-        doc.text('DICE-framework selectie:', 14, 40);
-        doc.text(`${this.getDiceLabel(this.answers.dice.value)}${this.answers.dice.other ? ` (${this.answers.dice.other})` : ''}`, 20, 48);
+        doc.setFontSize(12);
+        doc.setTextColor(0, 0, 0);
+        doc.setFont(undefined, 'bold');
+        doc.text('DICE-framework selectie:', 14, 60);
+        doc.setFont(undefined, 'normal');
+        doc.text(`${this.getDiceLabel(this.answers.dice.value)}${this.answers.dice.other ? ` (${this.answers.dice.other})` : ''}`, 20, 68);
+        
+        // Add a line
+        doc.setDrawColor(200, 200, 200);
+        doc.line(14, 80, 196, 80);
         
         // Add answers
-        let y = 60;
+        let y = 90;
         questionnaireData.sections.forEach((section, sectionIndex) => {
-            // Add section header
+            // Check if we need a new page
             if (y > 260) {
                 doc.addPage();
-                y = 20;
+                y = 30;
             }
             
+            // Add section header with colored background
+            doc.setFillColor(41, 98, 255);
+            doc.rect(14, y - 10, 183, 8, 'F');
             doc.setFontSize(14);
-            doc.setTextColor(0, 0, 0);
-            doc.text(section.title, 14, y);
+            doc.setTextColor(255, 255, 255);
+            doc.text(section.title, 16, y - 3);
             y += 10;
+            
+            // Add section description
+            doc.setFontSize(10);
+            doc.setTextColor(100);
+            const splitDesc = doc.splitTextToSize(section.description, 180);
+            doc.text(splitDesc, 14, y);
+            y += (splitDesc.length * 5) + 10;
             
             // Add questions and answers
             doc.setFontSize(11);
             section.questions.forEach(question => {
                 if (y > 260) {
                     doc.addPage();
-                    y = 20;
+                    y = 30;
                 }
                 
                 const answer = this.answers[question.id];
                 const answerText = answer ? this.getLikertLabel(answer) : 'Niet beantwoord';
                 
-                // Add question
+                // Add question with number
                 doc.setFont(undefined, 'bold');
-                doc.text(`${question.id}. ${question.text}`, 14, y);
-                y += 7;
+                doc.setTextColor(0, 0, 0);
+                const questionText = `${question.id}. ${question.text}`;
+                const splitQuestion = doc.splitTextToSize(questionText, 180);
+                doc.text(splitQuestion, 14, y);
+                y += (splitQuestion.length * 5) + 5;
                 
-                // Add answer
+                // Add answer with colored background based on score
+                if (answer) {
+                    const color = answer >= 4 ? 
+                        [200, 230, 201] : // Light green for positive answers
+                        answer <= 2 ? 
+                        [255, 205, 210] : // Light red for negative answers
+                        [255, 245, 157]; // Light yellow for neutral answers
+                    
+                    doc.setFillColor(...color);
+                    doc.roundedRect(14, y - 2, 183, 8, 2, 2, 'F');
+                }
+                
+                // Add answer text
                 doc.setFont(undefined, 'normal');
-                doc.text(`Antwoord: ${answerText}`, 20, y);
-                y += 10;
+                doc.setTextColor(0, 0, 0);
+                doc.text(`Antwoord: ${answerText}`, 16, y + 5);
+                y += 12;
                 
-                // Add some space between questions
-                y += 5;
+                // Add a subtle separator
+                doc.setDrawColor(240, 240, 240);
+                doc.line(14, y, 196, y);
+                y += 10;
             });
             
             // Add some space between sections
             y += 10;
         });
         
-        // Save the PDF
-        doc.save('vr_vragenlijst_resultaten.pdf');
+        // Add footer to all pages
+        const pageCount = doc.internal.getNumberOfPages();
+        for (let i = 1; i <= pageCount; i++) {
+            doc.setPage(i);
+            
+            // Add footer line
+            doc.setDrawColor(41, 98, 255);
+            doc.line(14, 280, 196, 280);
+            
+            // Add footer text
+            doc.setFontSize(8);
+            doc.setTextColor(150);
+            doc.text(
+                `Pagina ${i} van ${pageCount} | ${new Date().toLocaleDateString('nl-NL')} | Hogeschool Windesheim - Lectoraat Onderwijsinnovatie en ICT`, 
+                105, 
+                287, 
+                { align: 'center' }
+            );
+        }
+        
+        // Save the PDF with a timestamp in the filename
+        const timestamp = new Date().toISOString().replace(/[:.]/g, '-');
+        doc.save(`immersive_tech__vragenlijst_resultaten_${timestamp}.pdf`);
     }
     
     // Helper function to download files
@@ -1044,6 +1293,8 @@ class QuestionnaireApp {
         document.body.removeChild(a);
         URL.revokeObjectURL(url);
     }
+    
+// Setup auto-advance
     setupAutoAdvance() {
     // Use event delegation for better performance
     document.addEventListener('change', (e) => {
@@ -1070,6 +1321,9 @@ class QuestionnaireApp {
     }
 }
 
+// Make recommendations available globally
+let recommendations = window.recommendations || {};
+
 // Initialize the app when the DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
     // Load jsPDF from CDN if not already loaded
@@ -1085,6 +1339,10 @@ document.addEventListener('DOMContentLoaded', () => {
         };
         document.head.appendChild(script);
     } else {
+        // Load recommendations if available
+        if (window.recommendations) {
+            recommendations = window.recommendations;
+        }
         new QuestionnaireApp();
     }
 });
