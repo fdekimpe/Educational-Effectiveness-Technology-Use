@@ -1147,7 +1147,7 @@ getCurrentQuestion() {
         // Set document properties
         doc.setProperties({
             title: 'Immersive Tech Vragenlijst Resultaten',
-            subject: 'Resultaten van de VR vragenlijst',
+            subject: 'Resultaten van de Immersive Tech vragenlijst',
             author: 'Hogeschool Windesheim',
             keywords: 'Immersive Tech, vragenlijst, resultaten, onderwijs',
             creator: 'Immersive Tech Vragenlijst Applicatie'
