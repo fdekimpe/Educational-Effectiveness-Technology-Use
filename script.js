@@ -19,9 +19,6 @@ class QuestionnaireApp {
             exportPdf: document.getElementById('exportPdf'),
             newResponse: document.getElementById('newResponse'),
             startBtn: document.getElementById('startBtn'),
-            diceRadios: document.querySelectorAll('input[name="dice"]'),
-            diceOtherSection: document.getElementById('diceOtherSection'),
-            diceOther: document.getElementById('diceOther'),
             sectionDropdown: document.getElementById('sectionDropdown'),
             currentSectionText: document.getElementById('current-section'),
             sectionNavItems: document.querySelectorAll('.section-nav')
@@ -390,31 +387,10 @@ class QuestionnaireApp {
         // Export buttons
         this.elements.exportExcel?.addEventListener('click', () => this.exportToExcel());
         this.elements.exportPdf?.addEventListener('click', () => this.exportToPdf());
-        
-        // DICE framework radio buttons
-        this.elements.diceRadios?.forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                if (this.elements.diceOtherSection) {
-                    this.elements.diceOtherSection.style.display = 
-                        e.target.id === 'diceNone' ? 'block' : 'none';
-                }
-            });
-        });
     }
 
 // Start the questionnaire
 startQuestionnaire() {
-    // Save DICE framework selection
-    const selectedDice = document.querySelector('input[name="dice"]:checked');
-    if (!selectedDice) {
-        alert('Selecteer een optie om aan te geven waarom Immersive Tech wordt overwogen.');
-        return;
-    }
-    
-    this.answers.dice = {
-        value: selectedDice.value,
-        other: selectedDice.id === 'diceNone' ? this.elements.diceOther.value : ''
-    };
     
     // Hide intro and show questionnaire
     this.elements.intro.classList.add('d-none');
@@ -825,7 +801,7 @@ getCurrentQuestion() {
     
     // Update progress bar and text
     updateProgress() {
-        const totalAnswered = Object.keys(this.answers).length - (this.answers.dice ? 1 : 0); // Exclude DICE answer
+        const totalAnswered = Object.keys(this.answers).length
         const percentage = Math.round((totalAnswered / this.totalQuestions) * 100);
         
         this.elements.progressBar.style.width = `${percentage}%`;
@@ -837,10 +813,6 @@ getCurrentQuestion() {
     async analyzeAnswers() {
         // Prepare data for analysis
         const analysisData = {
-            dice: {
-                value: this.answers.dice.value,
-                other: this.answers.dice.other || ''
-            },
             sections: {}
         };
 
@@ -913,11 +885,6 @@ getCurrentQuestion() {
             aiResponse += '<h5>Aanbevelingen</h5>';
             aiResponse += '<ul>';
             
-            if (analysisData.dice.value === 'none' && analysisData.dice.other) {
-                aiResponse += `<li>Je gaf aan dat Immersive Tech wordt overwogen vanwege: "${analysisData.dice.other}". `;
-                aiResponse += 'Zorg ervoor dat dit specifieke voordeel ook daadwerkelijk wordt gerealiseerd in je Immersive Tech-toepassing.</li>';
-            }
-            
             if (strengths.length > 0) {
                 aiResponse += `<li>Bouw voort op je sterke punten (${strengths.join(', ')}) door deze elementen te benadrukken in je onderwijs.</li>`;
             }
@@ -973,12 +940,6 @@ getCurrentQuestion() {
                 </div>
             </div>
             <h3>Jouw antwoorden</h3>
-            <div class="answer-item">
-                <strong>DICE-framework selectie:</strong><br>
-                ${this.getDiceLabel(this.answers.dice.value)}
-                ${this.answers.dice.other ? `<br><em>${this.answers.dice.other}</em>` : ''}
-            </div>
-            <hr>
         `;
         
         // Add all answers
@@ -1007,12 +968,6 @@ getCurrentQuestion() {
         
         // Start AI analysis after rendering the summary
         this.analyzeAnswers();
-    }
-    
-    // Get label for DICE option
-    getDiceLabel(value) {
-        const option = questionnaireData.diceOptions.find(opt => opt.value === value);
-        return option ? option.label : value;
     }
     
     // Get label for Likert scale value
@@ -1052,18 +1007,6 @@ getCurrentQuestion() {
                 this.currentSectionIndex = currentSectionIndex || 0;
                 this.currentQuestionIndex = currentQuestionIndex || 0;
                 
-                // Restore DICE selection if exists
-                if (this.answers.dice) {
-                    const diceRadio = document.querySelector(`input[value="${this.answers.dice.value}"]`);
-                    if (diceRadio) {
-                        diceRadio.checked = true;
-                        if (this.answers.dice.value === 'none' && this.answers.dice.other) {
-                            this.elements.diceOtherSection.style.display = 'block';
-                            this.elements.diceOther.value = this.answers.dice.other;
-                        }
-                    }
-                }
-                
                 // Update progress display
                 this.updateProgress();
                 
@@ -1089,13 +1032,6 @@ getCurrentQuestion() {
             
             // Clear saved progress
             localStorage.removeItem('QuestionnaireProgress');
-            
-            // Reset DICE selection
-            this.elements.diceRadios?.forEach(radio => radio.checked = false);
-            if (this.elements.diceOtherSection) {
-                this.elements.diceOtherSection.style.display = 'none';
-                this.elements.diceOther.value = '';
-            }
         }
     }
     
@@ -1113,13 +1049,6 @@ getCurrentQuestion() {
         // Add headers
         const headers = ['Vraag ID', 'Vraag', 'Antwoord'];
         csv.push(headers.join(';'));
-        
-        // Add DICE framework selection
-        csv.push([
-            'DICE',
-            'DICE-framework selectie',
-            `${this.getDiceLabel(this.answers.dice.value)}${this.answers.dice.other ? ` (${this.answers.dice.other})` : ''}`
-        ].join(';'));
         
         // Add all answers
         questionnaireData.sections.forEach(section => {
@@ -1172,14 +1101,6 @@ getCurrentQuestion() {
             hour: '2-digit',
             minute: '2-digit'
         })}`, 14, 40);
-        
-        // Add DICE framework selection
-        doc.setFontSize(12);
-        doc.setTextColor(0, 0, 0);
-        doc.setFont(undefined, 'bold');
-        doc.text('DICE-framework selectie:', 14, 60);
-        doc.setFont(undefined, 'normal');
-        doc.text(`${this.getDiceLabel(this.answers.dice.value)}${this.answers.dice.other ? ` (${this.answers.dice.other})` : ''}`, 20, 68);
         
         // Add a line
         doc.setDrawColor(200, 200, 200);

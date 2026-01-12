@@ -810,7 +810,7 @@ window.questionnaireData = {
         {
             id: 'section1',
             title: 'Deel 1. Doelgerichtheid',
-            description: 'Dit deel gaat over doel, doelgroep en aanwijzingen voor gebruik.',
+            description: 'Dit deel gaat over doel, doelgroep en aanwijzingen voor gebruik.(Context)',
             questions: [
                 {
                     id: 'C1',
@@ -872,7 +872,7 @@ window.questionnaireData = {
         {
             id: 'section2',
             title: 'Deel 2. Didactiek',
-            description: 'Het gaat in dit deel om de uitdagingen en inhouden die de gebruiker in de VR-applicatie krijgt aangeboden en de manier waarop dit gebeurt.',
+            description: 'Het gaat in dit deel om de uitdagingen en inhouden die de gebruiker in de applicatie krijgt aangeboden en de manier waarop dit gebeurt.(Intervention)',
             questions: [
                 {
                     id: 'I1',
@@ -940,7 +940,7 @@ window.questionnaireData = {
         {
             id: 'section3',
             title: 'Deel 3. Leermechanismen',
-            description: 'Dit deel bevat stellingen over de processen die de applicatie bij de gebruiker in werking zet en hoe dat gebeurt.',
+            description: 'Dit deel bevat stellingen over de processen die de applicatie bij de gebruiker in werking zet en hoe dat gebeurt. (Mechanics)',
             questions: [
                 {
                     id: 'M1',
@@ -1007,7 +1007,7 @@ window.questionnaireData = {
         {
             id: 'section4',
             title: 'Deel 4. Effecten',
-            description: 'De stellingen in dit laatste deel gaan over de effecten die het gebruik van de VR-applicatie oplevert / kan opleveren.',
+            description: 'De stellingen in dit laatste deel gaan over de effecten die het gebruik van de applicatie oplevert / kan opleveren.(Outcome)',
             questions: [
                 {
                     id: 'O1',
@@ -1075,15 +1075,6 @@ window.questionnaireData = {
         { value: 3, label: 'Niet oneens, niet eens' },
         { value: 4, label: 'Eens' },
         { value: 5, label: 'Helemaal eens' }
-    ],
-    
-    // DICE framework options
-    diceOptions: [
-        { id: 'diceDangerous', value: 'dangerous', label: 'Dangerous (gevaarlijk)' },
-        { id: 'diceImpossible', value: 'impossible', label: 'Impossible (onmogelijk)' },
-        { id: 'diceCounterproductive', value: 'counterproductive', label: 'Counterproductive (onwenselijk)' },
-        { id: 'diceExpensive', value: 'expensive', label: 'Expensive (te duur)' },
-        { id: 'diceNone', value: 'none', label: 'Geen van bovenstaande' }
     ]
 };
 
