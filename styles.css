@@ -553,9 +553,6 @@ header img{
         margin: 0 0 1.5rem;
     }
     
-    .dice-section {
-        padding: 1rem;
-    }
     
     .form-check {
         padding-left: 1.75rem;
@@ -678,20 +675,6 @@ header img{
 .footer span {
     font-size: 0.85rem;
     color: #6c757d;
-}
-
-/* Sectie met DICE-framework */
-.dice-section {
-    background-color: #f8f9fa;
-    border-left: 4px solid #3498db;
-    padding: 1.5rem;
-    margin: 2rem 0;
-    border-radius: 0 5px 5px 0;
-}
-
-.dice-section h4 {
-    color: #1a5276;
-    margin-bottom: 1rem;
 }
 
 /* Waarschuwingsberichten */
