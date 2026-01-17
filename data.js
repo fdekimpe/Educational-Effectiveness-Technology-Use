@@ -68,7 +68,7 @@ const resources = {
     
     // Section 3: Leermechanismen
     vrPresence: {
-        title: "Aanwezigheidsgevoel in VR optimaliseren",
+        title: "",
         url: "#"
     },
     feedbackMechanisms: {
@@ -517,7 +517,6 @@ window.recommendations = {
                         title: "Nadelige effecten minimaliseren",
                         description: "Voer gebruikerstesten uit om eventuele negatieve effecten zoals desoriëntatie of motion sickness te identificeren en los deze op. Bied eventueel aanpassingsmogelijkheden aan.",
                         resources: [
-                            { title: "VR-gebruik optimaliseren", url: "#" },
                             { title: "Motion sickness voorkomen", url: "#" }
                         ]
                     }
@@ -540,10 +539,10 @@ window.recommendations = {
                 questionId: 'M4',
                 recommendations: [
                     {
-                        title: "Meerwaarde van VR benutten",
-                        description: "Maak optimaal gebruik van de unieke mogelijkheden van VR, zoals het simuleren van gevaarlijke of complexe situaties die in het echt niet mogelijk zijn.",
+                        title: "Meerwaarde van technologie benutten",
+                        description: "Maak optimaal gebruik van de unieke mogelijkheden van de technologie, zoals het simuleren van gevaarlijke of complexe situaties die in het echt niet mogelijk zijn.",
                         resources: [
-                            { title: "VR in het onderwijs", url: "#" },
+                            { title: " ", url: "#" },
                             { title: "Immersieve leerervaringen", url: "#" }
                         ]
                     }
@@ -580,7 +579,7 @@ window.recommendations = {
                 recommendations: [
                     {
                         title: "Aanwezigheidsgevoel versterken",
-                        description: "Optimaliseer de VR-ervaring om het gevoel van aanwezigheid te vergroten. Let hierbij op beeldkwaliteit, geluid en interactiemogelijkheden.",
+                        description: "Optimaliseer de ervaring om het gevoel van aanwezigheid te vergroten. Let hierbij op beeldkwaliteit, geluid en interactiemogelijkheden.",
                         resources: [
                             { title: "Presence in VR", url: "#" },
                             { title: "Immersieve ervaringen ontwerpen", url: "#" }
@@ -714,7 +713,7 @@ window.recommendations = {
                 recommendations: [
                     {
                         title: "Alternatieve beoordelingsvormen",
-                        description: "Maak gebruik van de unieke mogelijkheden van VR om vaardigheden en inzichten te beoordelen die met traditionele methoden moeilijk te meten zijn.",
+                        description: "Maak gebruik van de unieke mogelijkheden van de technologie om vaardigheden en inzichten te beoordelen die met traditionele methoden moeilijk te meten zijn.",
                         resources: [
                             { title: "Alternatieve toetsvormen", url: "#" },
                             { title: "Vaardigheden beoordelen", url: "#" }
@@ -740,7 +739,7 @@ window.recommendations = {
                 recommendations: [
                     {
                         title: "Meerwaarde benadrukken",
-                        description: "Maak expliciet welke voordelen het gebruik van VR biedt ten opzichte van traditionele methoden, bijvoorbeeld op het gebied van veiligheid of kosten.",
+                        description: "Maak expliciet welke voordelen het gebruik van de technologie biedt ten opzichte van traditionele methoden, bijvoorbeeld op het gebied van veiligheid of kosten.",
                         resources: [
                             { title: "Kosten-batenanalyse", url: "#" },
                             { title: "ROI van educatieve technologie", url: "#" }
