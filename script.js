@@ -284,21 +284,25 @@ class QuestionnaireApp {
     getRecommendationsForQuestion(sectionId, questionId) {
         console.log('Looking for recommendations for:', { sectionId, questionId });
         
-        // Controleer of de sectie bestaat in de recommendations
-        if (!recommendations?.sectionSpecific?.[sectionId]) {
-            console.log('No recommendations found for section:', sectionId);
+        // Find the section in questionnaireData
+        const section = questionnaireData.sections.find(s => s.id === sectionId);
+        if (!section) {
+            console.log('No section found with ID:', sectionId);
             return [];
         }
         
-        const sectionRecs = recommendations.sectionSpecific[sectionId];
-        console.log('Section recommendations:', sectionRecs);
+        // Find the question in the section
+        const question = section.questions.find(q => q.id === questionId);
+        if (!question) {
+            console.log('No question found with ID:', questionId);
+            return [];
+        }
         
-        // Zoek naar de specifieke vraag in de sectie-aanbevelingen
-        const questionRecs = sectionRecs.find(item => item.questionId === questionId);
+        // Return the recommendations for this question
+        const questionRecs = question.recommendations || [];
         console.log('Found recommendations for question:', questionRecs);
         
-        // Als er specifieke aanbevelingen zijn, retourneer die, anders retourneer een lege array
-        return questionRecs?.recommendations || [];
+        return questionRecs;
     }
     
     // Helper method to format resources as HTML
@@ -1106,36 +1110,119 @@ getCurrentQuestion() {
         doc.setDrawColor(200, 200, 200);
         doc.line(14, 80, 196, 80);
         
-        // Add answers
+        // Add summary of tips
         let y = 90;
+        doc.setFontSize(16);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Samenvatting van aanbevelingen', 14, y);
+        y += 10;
+        
+        // Collect all low scoring questions and their recommendations
+        const allRecommendations = [];
+        questionnaireData.sections.forEach(section => {
+            section.questions.forEach(question => {
+                const answer = this.answers[question.id];
+                if (answer && answer <= 3) {
+                    const questionRecs = this.getRecommendationsForQuestion(section.id, question.id);
+                    if (questionRecs && questionRecs.length > 0) {
+                        allRecommendations.push({
+                            questionId: question.id,
+                            questionText: question.text,
+                            score: answer,
+                            recommendations: questionRecs
+                        });
+                    }
+                }
+            });
+        });
+        
+        if (allRecommendations.length > 0) {
+            doc.setFontSize(12);
+            doc.setTextColor(50, 50, 50);
+            doc.text(`Er zijn ${allRecommendations.length} aandachtspunten geïdentificeerd die verbetering nodig hebben:`, 14, y);
+            y += 8;
+            
+            allRecommendations.forEach(item => {
+                if (y > 260) {
+                    doc.addPage();
+                    y = 30;
+                }
+                
+                doc.setFont(undefined, 'bold');
+                doc.setTextColor(0, 0, 0);
+                doc.text(`${item.questionId}. Score: ${item.score}/5`, 14, y);
+                y += 5;
+                
+                doc.setFont(undefined, 'normal');
+                doc.setTextColor(60, 60, 60);
+                const splitQuestion = doc.splitTextToSize(item.questionText, 180);
+                doc.text(splitQuestion, 14, y);
+                y += (splitQuestion.length * 5) + 3;
+                
+                item.recommendations.forEach(rec => {
+                    doc.setFont(undefined, 'italic');
+                    doc.setTextColor(100, 100, 100);
+                    doc.text(`   • ${rec.title}`, 14, y);
+                    y += 5;
+                    
+                    // Add description
+                    doc.setFont(undefined, 'normal');
+                    doc.setTextColor(80, 80, 80);
+                    const splitDesc = doc.splitTextToSize(rec.description, 170);
+                    doc.text(splitDesc, 18, y);
+                    y += (splitDesc.length * 4) + 3;
+                });
+                
+                y += 5;
+            });
+        } else {
+            doc.setFontSize(12);
+            doc.setTextColor(50, 150, 50);
+            doc.text('Goed nieuws! Geen aandachtspunten geïdentificeerd.', 14, y);
+            y += 10;
+        }
+        
+        // Add separator before detailed answers
+        y += 10;
+        doc.setDrawColor(200, 200, 200);
+        doc.line(14, y, 196, y);
+        y += 15;
+        
+        doc.setFontSize(14);
+        doc.setTextColor(0, 0, 0);
+        doc.text('Gedetailleerde antwoorden per sectie', 14, y);
+        y += 15;
+        
+        // Add answers
+        let yAnswers = y;
         questionnaireData.sections.forEach((section, sectionIndex) => {
             // Check if we need a new page
-            if (y > 260) {
+            if (yAnswers > 260) {
                 doc.addPage();
-                y = 30;
+                yAnswers = 30;
             }
             
             // Add section header with colored background
             doc.setFillColor(41, 98, 255);
-            doc.rect(14, y - 10, 183, 8, 'F');
+            doc.rect(14, yAnswers - 10, 183, 8, 'F');
             doc.setFontSize(14);
             doc.setTextColor(255, 255, 255);
-            doc.text(section.title, 16, y - 3);
-            y += 10;
+            doc.text(section.title, 16, yAnswers - 3);
+            yAnswers += 10;
             
             // Add section description
             doc.setFontSize(10);
             doc.setTextColor(100);
             const splitDesc = doc.splitTextToSize(section.description, 180);
-            doc.text(splitDesc, 14, y);
-            y += (splitDesc.length * 5) + 10;
+            doc.text(splitDesc, 14, yAnswers);
+            yAnswers += (splitDesc.length * 5) + 10;
             
             // Add questions and answers
             doc.setFontSize(11);
             section.questions.forEach(question => {
-                if (y > 260) {
+                if (yAnswers > 260) {
                     doc.addPage();
-                    y = 30;
+                    yAnswers = 30;
                 }
                 
                 const answer = this.answers[question.id];
@@ -1146,8 +1233,8 @@ getCurrentQuestion() {
                 doc.setTextColor(0, 0, 0);
                 const questionText = `${question.id}. ${question.text}`;
                 const splitQuestion = doc.splitTextToSize(questionText, 180);
-                doc.text(splitQuestion, 14, y);
-                y += (splitQuestion.length * 5) + 5;
+                doc.text(splitQuestion, 14, yAnswers);
+                yAnswers += (splitQuestion.length * 5) + 5;
                 
                 // Add answer with colored background based on score
                 if (answer) {
@@ -1158,23 +1245,81 @@ getCurrentQuestion() {
                         [255, 245, 157]; // Light yellow for neutral answers
                     
                     doc.setFillColor(...color);
-                    doc.roundedRect(14, y - 2, 183, 8, 2, 2, 'F');
+                    doc.roundedRect(14, yAnswers - 2, 183, 8, 2, 2, 'F');
                 }
                 
                 // Add answer text
                 doc.setFont(undefined, 'normal');
                 doc.setTextColor(0, 0, 0);
-                doc.text(`Antwoord: ${answerText}`, 16, y + 5);
-                y += 12;
+                doc.text(`Antwoord: ${answerText}`, 16, yAnswers + 5);
+                yAnswers += 12;
+                
+                // Add tips/recommendations for low scoring questions (1-3)
+                if (answer && answer <= 3) {
+                    // Get recommendations for this question
+                    const questionRecs = this.getRecommendationsForQuestion(section.id, question.id);
+                    
+                    if (questionRecs && questionRecs.length > 0) {
+                        // Add tips header
+                        doc.setFillColor(255, 245, 157); // Light yellow background
+                        doc.roundedRect(14, yAnswers - 2, 183, 8, 2, 2, 'F');
+                        doc.setFont(undefined, 'bold');
+                        doc.setTextColor(50, 50, 50);
+                        doc.text('💡 Tips voor verbetering:', 16, yAnswers + 5);
+                        yAnswers += 12;
+                        
+                        // Add each recommendation
+                        questionRecs.forEach(rec => {
+                            if (yAnswers > 260) {
+                                doc.addPage();
+                                yAnswers = 30;
+                            }
+                            
+                            // Add recommendation title
+                            doc.setFont(undefined, 'bold');
+                            doc.setTextColor(0, 0, 0);
+                            doc.text(`• ${rec.title}`, 16, yAnswers);
+                            yAnswers += 6;
+                            
+                            // Add recommendation description
+                            doc.setFont(undefined, 'normal');
+                            doc.setTextColor(60, 60, 60);
+                            const splitDesc = doc.splitTextToSize(rec.description, 170);
+                            doc.text(splitDesc, 20, yAnswers);
+                            yAnswers += (splitDesc.length * 5) + 3;
+                            
+                            // Add resources if available
+                            if (rec.resources && rec.resources.length > 0) {
+                                doc.setFont(undefined, 'italic');
+                                doc.setTextColor(100, 100, 100);
+                                doc.text('Bronnen:', 20, yAnswers);
+                                yAnswers += 5;
+                                
+                                rec.resources.forEach(resource => {
+                                    if (yAnswers > 260) {
+                                        doc.addPage();
+                                        yAnswers = 30;
+                                    }
+                                    const resourceText = `   - ${resource.title}`;
+                                    doc.text(resourceText, 20, yAnswers);
+                                    yAnswers += 5;
+                                });
+                                yAnswers += 3;
+                            }
+                        });
+                        
+                        yAnswers += 5; // Extra space after tips
+                    }
+                }
                 
                 // Add a subtle separator
                 doc.setDrawColor(240, 240, 240);
-                doc.line(14, y, 196, y);
-                y += 10;
+                doc.line(14, yAnswers, 196, yAnswers);
+                yAnswers += 10;
             });
             
             // Add some space between sections
-            y += 10;
+            yAnswers += 10;
         });
         
         // Add footer to all pages

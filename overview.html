@@ -175,7 +175,6 @@
             // Genereer de inhoud voor elke sectie
             window.questionnaireData.sections.forEach(section => {
                 const sectionNumber = section.id.replace('section', '');
-                const sectionRecommendations = window.recommendations.sectionSpecific[section.id] || [];
                 
                 // Voeg toe aan inhoudsopgave
                 const tocItem = document.createElement('li');
@@ -184,14 +183,6 @@
                 tocLink.textContent = section.title;
                 tocItem.appendChild(tocLink);
                 tocList.appendChild(tocItem);
-                
-                // Maak een mapping van questionId naar aanbevelingen
-                const recommendationsMap = new Map();
-                sectionRecommendations.forEach(item => {
-                    if (item.questionId && item.recommendations) {
-                        recommendationsMap.set(item.questionId, item.recommendations);
-                    }
-                });
                 
                 // Maak de sectie
                 const sectionElement = document.createElement('div');
@@ -215,7 +206,7 @@
                 // Voeg vragen toe
                 section.questions.forEach(question => {
                     const questionId = question.id;
-                    const questionRecommendations = recommendationsMap.get(questionId) || [];
+                    const questionRecommendations = question.recommendations || [];
                     
                     let recommendationsHTML = '';
                     if (questionRecommendations.length > 0) {

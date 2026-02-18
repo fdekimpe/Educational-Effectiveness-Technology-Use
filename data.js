@@ -407,8 +407,8 @@ window.questionnaireData = {
                             title: "Samenwerking faciliteren",
                             description: "Integreer mogelijkheden voor samenwerking, zoals gezamenlijke opdrachten, peer feedback of discussiefora. Zorg voor duidelijke instructies over de samenwerking.",
                             resources: [
-                                { title: "Samenwerkend leren", url: "#" },
-                                { title: "Coöperatieve werkvormen", url: "#" }
+                                { title: "Samenwerkend leren (website)", url: "https://www.onderwijskennis.nl/themas/samenwerkend-leren" },
+                                { title: "Vormgeven aan effectief samenwerkend leren in het onderwijs(video)", url: "https://youtu.be/nVr-M9EzKd4?si=WP9Dt3-TiWNcCIfj" }
                             ]
                         }
                     ]
@@ -422,8 +422,8 @@ window.questionnaireData = {
                             title: "Meerwaarde van technologie benutten",
                             description: "Maak optimaal gebruik van de unieke mogelijkheden van de technologie, zoals het simuleren van gevaarlijke of complexe situaties die in het echt niet mogelijk zijn.",
                             resources: [
-                                { title: " ", url: "#" },
-                                { title: "Immersieve leerervaringen", url: "#" }
+                                // { title: " ", url: "#" },
+                                { title: "Impact maken met immersive reality", url: "https://www.hu.nl/nieuws/impact-maken-met-immersive-reality" }
                             ]
                         }
                     ]
@@ -437,8 +437,7 @@ window.questionnaireData = {
                             title: "Voortgang inzichtelijk maken",
                             description: "Bied duidelijke en gedetailleerde feedback over de voortgang van de gebruiker. Gebruik hiervoor bijvoorbeeld een dashboard met behaalde resultaten en verbeterpunten.",
                             resources: [
-                                { title: "Formatieve evaluatie", url: "#" },
-                                { title: "Leerlingvolgsystemen", url: "#" }
+                                { title: "Feedbackprocessen (podcast)", url: "https://open.spotify.com/episode/02OTITApchIICLE1zL6lFM" }
                             ]
                         }
                     ]
@@ -452,8 +451,8 @@ window.questionnaireData = {
                             title: "Feedback verbeteren",
                             description: "Zorg voor specifieke, constructieve feedback die de gebruiker helpt om zijn/haar aanpak te verbeteren. Richt je zowel op wat goed gaat als op verbeterpunten.",
                             resources: [
-                                { title: "Effectieve feedback geven", url: "#" },
-                                { title: "Formatieve assessment technieken", url: "#" }
+                                // { title: "Effectieve feedback geven", url: "#" },
+                                { title: "Feedback die aan het denken zet (podcast)", url: "https://wijzelessen.transistor.fm/episodes/s2-12-geef-feedback-die-leerlingen-aan-het-denken-zet" }
                             ]
                         }
                     ]
@@ -467,8 +466,8 @@ window.questionnaireData = {
                             title: "Aanwezigheidsgevoel versterken",
                             description: "Optimaliseer de ervaring om het gevoel van aanwezigheid te vergroten. Let hierbij op beeldkwaliteit, geluid en interactiemogelijkheden.",
                             resources: [
-                                { title: "Presence in VR", url: "#" },
-                                { title: "Immersieve ervaringen ontwerpen", url: "#" }
+                                // { title: "Immersieve ervaringen ontwerpen", url: "#" },
+                                 { title: "Belang van aanwezigheid in VR", url: "https://wetenschap.net/wat-is-aanwezigheid-in-vr-en-waarom-is-het-zo-belangrijk" }
                             ]
                         }
                     ]
@@ -482,8 +481,8 @@ window.questionnaireData = {
                             title: "Perspectief optimaliseren",
                             description: "Kies het meest geschikte perspectief voor de leerdoelen en zorg ervoor dat dit perspectief bijdraagt aan het leerproces. Overweeg om gebruikers te laten wisselen van perspectief.",
                             resources: [
-                                { title: "Perspectief in VR", url: "#" },
-                                { title: "Empathie en perspectief", url: "#" }
+                                // { title: "Perspectief in VR", url: "#" },
+                                { title: "Emotie in digitale ruimtes (website)", url: "https://vintageplaatjes.nl/op-welke-manier-breng-je-emotie-in-digitale-ruimtes/" }
                             ]
                         }
                     ]
@@ -497,8 +496,8 @@ window.questionnaireData = {
                             title: "Afstand optimaliseren",
                             description: "Zorg ervoor dat objecten en personen in de virtuele omgeving op een natuurlijke afstand staan die het leren ondersteunt. Houd rekening met het gezichtsveld en de leesbaarheid.",
                             resources: [
-                                { title: "VR interface design", url: "#" },
-                                { title: "Ergonomie in VR", url: "#" }
+                                // { title: "VR interface design", url: "#" },
+                                { title: "Ergonomie in VR (website)", url: "https://www.teamslinger.nl/virtual-reality-in-gaming-de-toekomst-van-spelervaringen/" }
                             ]
                         }
                     ]
@@ -512,8 +511,8 @@ window.questionnaireData = {
                             title: "Informatieverdeling optimaliseren",
                             description: "Toon informatie in behapbare brokken en voorkom overbelasting van het werkgeheugen. Gebruik eventueel een progressieve onthulling van informatie.",
                             resources: [
-                                { title: "Cognitieve belasting", url: "#" },
-                                { title: "Informatiearchitectuur", url: "#" }
+                                // { title: "Informatiearchitectuur", url: "#" },
+                                { title: "Cognitieve belasting (podcast)", url: "https://vernieuwenderwijs.nl/de-wijsneuzen-aflevering20-cognitieve-belasting/" }
                             ]
                         }
                     ]
@@ -528,7 +527,7 @@ window.questionnaireData = {
                             description: "Zorg voor een realistische en betekenisvolle virtuele omgeving die aansluit bij de leerdoelen. Voeg relevante elementen toe die het leren ondersteunen.",
                             resources: [
                                 { title: "Virtuele leeromgevingen", url: "#" },
-                                { title: "Authentieke leeromgevingen", url: "#" }
+                                { title: "Mixed reality ontwerpen (website)", url: "https://learn.microsoft.com/nl-nl/windows/mixed-reality/design/design" }
                             ]
                         }
                     ]
@@ -542,8 +541,8 @@ window.questionnaireData = {
                             title: "Interactie verbeteren",
                             description: "Zorg voor betekenisvolle interactiemogelijkheden die bijdragen aan het leerproces. Stimuleer actieve betrokkenheid en het toepassen van kennis.",
                             resources: [
-                                { title: "Interactie in VR", url: "#" },
-                                { title: "Actief leren", url: "#" }
+                                // { title: "Interactie in VR", url: "#" },
+                                { title: "Actief leren (podcast)", url: "https://wijzelessen.transistor.fm/episodes/6-laat-leerstof-actief-verwerken" }
                             ]
                         }
                     ]
@@ -564,8 +563,8 @@ window.questionnaireData = {
                             title: "Leerervaring verrijken",
                             description: "Verzamel feedback van gebruikers om de leerervaring te verbeteren. Besteed aandacht aan zowel cognitieve als affectieve aspecten van het leren.",
                             resources: [
-                                { title: "Leerbeleving optimaliseren", url: "#" },
-                                { title: "Motivatie verhogen", url: "#" }
+                                // { title: "Leerbeleving optimaliseren", url: "#" },
+                                { title: "motiverend toetsen (podcast)", url: "https://vernieuwenderwijs.nl/de-wijsneuzen-aflevering19-motiverende-breinprincipes/" }
                             ]
                         }
                     ]
@@ -579,8 +578,8 @@ window.questionnaireData = {
                             title: "Evaluatie verbeteren",
                             description: "Zorg voor duidelijke criteria en methoden om te bepalen of de leerdoelen zijn behaald. Gebruik hiervoor bijvoorbeeld toetsen, observaties of producten.",
                             resources: [
-                                { title: "Toetsen en evalueren", url: "#" },
-                                { title: "Leerdoelen toetsen", url: "#" }
+                                // { title: "Toetsen en evalueren", url: "#" },
+                                { title: "Toetsen als leerstrategie (podcast)", url: "https://wijzelessen.transistor.fm/episodes/s2-11-gebruik-toetsing-als-leer-en-oefenstrategie" }
                             ]
                         }
                     ]
@@ -590,11 +589,11 @@ window.questionnaireData = {
                     text: 'De evaluatie past naadloos op het leerdoel. Met andere woorden: bij een kennisdoel is de evaluatie gericht op die kennis; bij een doel rondom emoties is de evaluatie gericht op die emoties, etc.',
                     type: 'likert',
                     recommendations: [
-                        {C
+                        {
                             title: "Evaluatie afstemmen",
                             description: "Zorg voor een nauwe aansluiting tussen de leerdoelen en de evaluatie. Gebruik verschillende soorten evaluatie die passen bij de aard van de leerdoelen.",
                             resources: [
-                                { title: "Wat is constructive alignment?", url: "https://vernieuwenderwijs.nl/barend-legt-uit-constructive-alignment-video/" }
+                                { title: "Wat is constructive alignment?", url: "https://vernieuwenderwijs.nl/barend-legt-uit-constructive-alignment-video/" },
                                 { title: "Constructive alignment toepassen.", url: "https://www.ru.nl/medewerkers/docenten/onderwijs-ontwerpen/cursussen-ontwerpen/leerdoelen-integreren" },
                             ]
                         }
@@ -609,8 +608,8 @@ window.questionnaireData = {
                             title: "Conceptueel begrip versterken",
                             description: "Gebruik visuele representaties, interactieve simulaties en concrete voorbeelden om abstracte concepten begrijpelijker te maken.",
                             resources: [
-                                { title: "Conceptueel leren", url: "#" },
-                                { title: "Visualisaties in onderwijs", url: "#" }
+                              { title: "Visualisaties in onderwijs", url: "#" },
+                              { title: "Conceptueel denken (website)", url: "https://competentiesvoorbeelden.nl/vaardigheden/conceptueel-denken/" }
                             ]
                         }
                     ]
@@ -624,8 +623,8 @@ window.questionnaireData = {
                             title: "Alternatieve beoordelingsvormen",
                             description: "Maak gebruik van de unieke mogelijkheden van de technologie om vaardigheden en inzichten te beoordelen die met traditionele methoden moeilijk te meten zijn.",
                             resources: [
-                                { title: "Alternatieve toetsvormen", url: "#" },
-                                { title: "Vaardigheden beoordelen", url: "#" }
+                                // { title: "Alternatieve toetsvormen", url: "#" },
+                                { title: "model Vier in balans (website)", url: "https://www.kennisnet.nl/beleid-en-organisatie/vier-in-balans-een-betrouwbaar-houvast-bij-keuzes-voor-ict-inzet/" }
                             ]
                         }
                     ]
@@ -639,8 +638,8 @@ window.questionnaireData = {
                             title: "Docentinformatie verbeteren",
                             description: "Bied docenten gedetailleerde informatie over de voortgang en prestaties van studenten, zodat zij hun begeleiding hierop kunnen afstemmen.",
                             resources: [
-                                { title: "Data-gedreven onderwijs", url: "#" },
-                                { title: "Learning analytics", url: "#" }
+                                // { title: "Data-gedreven onderwijs", url: "#" },
+                                // { title: "Learning analytics", url: "#" }
                             ]
                         }
                     ]
@@ -654,8 +653,8 @@ window.questionnaireData = {
                             title: "Meerwaarde benadrukken",
                             description: "Maak expliciet welke voordelen het gebruik van de technologie biedt ten opzichte van traditionele methoden, bijvoorbeeld op het gebied van veiligheid of kosten.",
                             resources: [
-                                { title: "Kosten-batenanalyse", url: "#" },
-                                { title: "ROI van educatieve technologie", url: "#" }
+                                // { title: "Kosten-batenanalyse", url: "#" },
+                                // { title: "ROI van educatieve technologie", url: "#" }
                             ]
                         }
                     ]
@@ -669,8 +668,8 @@ window.questionnaireData = {
                             title: "21e-eeuwse vaardigheden integreren",
                             description: "Benoem expliciet welke generieke vaardigheden worden ontwikkeld en bied mogelijkheden om deze te oefenen en te reflecteren.",
                             resources: [
-                                { title: "21e-eeuwse vaardigheden", url: "#" },
-                                { title: "Burgerschapsvorming", url: "#" }
+                                // { title: "21e-eeuwse vaardigheden", url: "#" },
+                                { title: "21e-eeuwse vaardigheden", url: "https://www.slo.nl/thema/meer/vaardigheden-landelijke-curriculum/" }
                             ]
                         }
                     ]
@@ -684,8 +683,8 @@ window.questionnaireData = {
                             title: "Risico's minimaliseren",
                             description: "Identificeer mogelijke negatieve effecten van het gebruik van de applicatie en neem maatregelen om deze te voorkomen of te beperken.",
                             resources: [
-                                { title: "Ethische aspecten van VR", url: "#" },
-                                { title: "Veilig gebruik van technologie", url: "#" }
+                                // { title: "Ethische aspecten van VR", url: "#" },
+                                // { title: "Veilig gebruik van technologie", url: "#" }
                             ]
                         }
                     ]
@@ -699,8 +698,8 @@ window.questionnaireData = {
                             title: "Transfer bevorderen",
                             description: "Zorg voor voldoende oefening in verschillende contexten en stimuleer het bewustzijn van overeenkomsten tussen de virtuele en fysieke wereld.",
                             resources: [
-                                { title: "Transfer van leren", url: "#" },
-                                { title: "Toepassen in nieuwe situaties", url: "#" }
+                                // { title: "Transfer van leren", url: "#" },
+                                { title: "Leren en context (podcast)", url: "https://wijzelessen.transistor.fm/episodes/14-context" }
                             ]
                         }
                     ]
@@ -714,8 +713,8 @@ window.questionnaireData = {
                             title: "Generalisatie stimuleren",
                             description: "Bied gevarieerde oefensituaties aan en moedig studenten aan om verbanden te leggen met andere contexten. Gebruik reflectievragen om het generaliseren te bevorderen.",
                             resources: [
-                                { title: "Generalisatie in leren", url: "#" },
-                                { title: "Dieper leren stimuleren", url: "#" }
+                                // { title: "Generalisatie in leren", url: "#" },
+                                { title: "Leren en context (podcast)", url: "https://wijzelessen.transistor.fm/episodes/14-context" }
                             ]
                         }
                     ]
